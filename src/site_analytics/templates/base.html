@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}Site Analytics{% endblock %}</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "admin/css/base.css" %}" />
+    <link rel="stylesheet" href="{% static "admin/css/forms.css" %}" />
+    <script type="text/javascript" src="/admin/jsi18n/"></script>
+    <script type="text/javascript" src="{% static "admin/js/core.js" %}"></script>
+    <script type="text/javascript" src="{% static "admin/js/vendor/jquery/jquery.js" %}"></script>
+    <script type="text/javascript" src="{% static "admin/js/jquery.init.js" %}"></script>
+    <script type="text/javascript" src="{% static "admin/js/admin/RelatedObjectLookups.js" %}"></script>
+    <script type="text/javascript" src="{% static "admin/js/actions.js" %}"></script>
+    <script type="text/javascript" src="{% static "admin/js/urlify.js" %}"></script>
+    <script type="text/javascript" src="{% static "admin/js/prepopulate.js" %}"></script>
+    <script type="text/javascript" src="{% static "admin/js/vendor/xregexp/xregexp.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "admin/js/calendar.js" %}"></script>
+    <script type="text/javascript" src="{% static "admin/js/admin/DateTimeShortcuts.js" %}"></script>
+</head>
+
+<body>
+    <div id="sidebar">
+        {% block sidebar %}
+        <ul>
+            <li><a href="/">API root</a></li>
+            <li><a href="/filter.html">Request filtering interface</a></li>
+        </ul>
+        {% endblock %}
+    </div>
+
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

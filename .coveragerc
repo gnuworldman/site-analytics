@@ -1,0 +1,7 @@
+[report]
+show_missing = true
+
+[run]
+source = src
+branch = true
+omit = src/site_analytics/wsgi.py

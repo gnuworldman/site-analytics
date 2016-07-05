@@ -1,0 +1,8 @@
+language: python
+python:
+  - "3.5"
+addons:
+  postgresql: "9.5"
+script: make test
+after_success:
+  coveralls
