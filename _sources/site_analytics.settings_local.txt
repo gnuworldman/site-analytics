@@ -1,0 +1,7 @@
+site_analytics.settings_local module
+====================================
+
+.. automodule:: site_analytics.settings_local
+    :members:
+    :undoc-members:
+    :show-inheritance:

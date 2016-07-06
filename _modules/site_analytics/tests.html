@@ -1,0 +1,508 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>site_analytics.tests &mdash; Site Analytics 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Site Analytics 0.1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for site_analytics.tests</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Tests for the site_analytics project.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlparse</span>
+
+<span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span> <span class="nn">django.utils.dateparse</span> <span class="kn">import</span> <span class="n">parse_datetime</span>
+<span class="kn">from</span> <span class="nn">django.utils.timezone</span> <span class="kn">import</span> <span class="n">now</span>
+<span class="kn">from</span> <span class="nn">pytz</span> <span class="kn">import</span> <span class="n">UTC</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">status</span>
+<span class="kn">from</span> <span class="nn">rest_framework.test</span> <span class="kn">import</span> <span class="n">APITestCase</span>
+
+<span class="kn">from</span> <span class="nn">site_analytics</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">site_analytics._version</span> <span class="kn">import</span> <span class="n">__version__</span>
+
+
+<div class="viewcode-block" id="RequestModelTestCase"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestModelTestCase">[docs]</a><span class="k">class</span> <span class="nc">RequestModelTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RequestModelTestCase.test_str"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestModelTestCase.test_str">[docs]</a>    <span class="k">def</span> <span class="nf">test_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://host.net/&#39;</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">full_clean</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;Request object&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;Request {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">pk</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="BaseAPITestCase"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.BaseAPITestCase">[docs]</a><span class="k">class</span> <span class="nc">BaseAPITestCase</span><span class="p">(</span><span class="n">APITestCase</span><span class="p">):</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="BaseAPITestCase.get_url_base"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.BaseAPITestCase.get_url_base">[docs]</a>    <span class="k">def</span> <span class="nf">get_url_base</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="o">.</span><span class="n">environ</span>
+        <span class="k">return</span> <span class="s1">&#39;{}://{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;wsgi.url_scheme&#39;</span><span class="p">],</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;SERVER_NAME&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="BaseAPITestCase.assertTimestamp"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.BaseAPITestCase.assertTimestamp">[docs]</a>    <span class="k">def</span> <span class="nf">assertTimestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">parse_datetime</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;Timestamp is not parsable.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="BaseAPITestCase.assertRecentTimestamp"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.BaseAPITestCase.assertRecentTimestamp">[docs]</a>    <span class="k">def</span> <span class="nf">assertRecentTimestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTimestamp</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">now</span><span class="p">()</span>
+        <span class="n">recent</span> <span class="o">=</span> <span class="n">current</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">recent</span> <span class="o">&lt;=</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="n">current</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="VersionAPITestCase"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.VersionAPITestCase">[docs]</a><span class="k">class</span> <span class="nc">VersionAPITestCase</span><span class="p">(</span><span class="n">BaseAPITestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="VersionAPITestCase.test_get"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.VersionAPITestCase.test_get">[docs]</a>    <span class="k">def</span> <span class="nf">test_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;version-list&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">__version__</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="RequestAPITestCase"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestAPITestCase">[docs]</a><span class="k">class</span> <span class="nc">RequestAPITestCase</span><span class="p">(</span><span class="n">BaseAPITestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RequestAPITestCase.test_post"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestAPITestCase.test_post">[docs]</a>    <span class="k">def</span> <span class="nf">test_post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;request-list&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://host.net/login.html&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_201_CREATED</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Location&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">actual</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="n">actual_location</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">actual</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;self&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">actual_location</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRecentTimestamp</span><span class="p">(</span><span class="n">actual</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertDictEqual</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">actual</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="s1">&#39;{}/{}/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">),</span> <span class="n">obj</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">expected</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">),</span> <span class="n">obj</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestAPITestCase.test_post_with_data"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestAPITestCase.test_post_with_data">[docs]</a>    <span class="k">def</span> <span class="nf">test_post_with_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;request-list&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://host.net/index.html&#39;</span><span class="p">,</span>
+                    <span class="n">user</span><span class="o">=</span><span class="s1">&#39;me&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_201_CREATED</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Location&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">path</span>
+        <span class="n">actual</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="n">actual_location</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">actual</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;self&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">actual_location</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">actual</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertDictEqual</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">actual</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="s1">&#39;{}/{}/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">),</span> <span class="n">obj</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">expected</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">),</span> <span class="n">obj</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">timestamp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertDictEqual</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestAPITestCase.test_post_invalid_missing_url"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestAPITestCase.test_post_invalid_missing_url">[docs]</a>    <span class="k">def</span> <span class="nf">test_post_invalid_missing_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">not_url</span><span class="o">=</span><span class="s1">&#39;https://host.net/login.html&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;request-list&#39;</span><span class="p">),</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;This field is required.&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertDictEqual</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestAPITestCase.test_post_invalid_url"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestAPITestCase.test_post_invalid_url">[docs]</a>    <span class="k">def</span> <span class="nf">test_post_invalid_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;This is a malformed URL.&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;request-list&#39;</span><span class="p">),</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Enter a valid URL.&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertDictEqual</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestAPITestCase.test_get"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestAPITestCase.test_get">[docs]</a>    <span class="k">def</span> <span class="nf">test_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># get empty collection</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;request-list&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([],</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">])</span>
+
+        <span class="c1"># create first entity</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://host.net/index.html&#39;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s1">&#39;me&#39;</span><span class="p">))</span>
+
+        <span class="c1"># get collection with one entity</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">actual</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">actual</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertRecentTimestamp</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">))</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;request-detail&#39;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">pk</span><span class="p">))</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_url_base</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">+</span> <span class="n">path</span><span class="p">,</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="n">expected</span><span class="p">],</span> <span class="n">actual</span><span class="p">)</span>
+
+        <span class="c1"># get entity</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">actual</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRecentTimestamp</span><span class="p">(</span><span class="n">actual</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertDictEqual</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">actual</span><span class="p">)</span>
+
+        <span class="c1"># create second entity</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://host.net/index.html&#39;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">user</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">666</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Montgomery Burns&quot;</span><span class="p">),</span>
+                <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;Batman&#39;</span><span class="p">))</span>
+
+        <span class="c1"># get collection with multiple entities</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;request-list&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">actual</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">actual</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertRecentTimestamp</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">))</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;request-detail&#39;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">pk</span><span class="p">))</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_url_base</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">+</span> <span class="n">path</span><span class="p">,</span>
+                <span class="n">url</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">url</span><span class="p">),</span>
+            <span class="n">expected</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">actual</span><span class="p">)</span>
+
+        <span class="c1"># get second entity</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">actual</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRecentTimestamp</span><span class="p">(</span><span class="n">actual</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertDictEqual</span><span class="p">(</span><span class="n">expected</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">actual</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="RequestQueryTestCase"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase">[docs]</a><span class="k">class</span> <span class="nc">RequestQueryTestCase</span><span class="p">(</span><span class="n">BaseAPITestCase</span><span class="p">):</span>
+
+    <span class="n">sites</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;https://host1.net&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;https://host2.net&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;https://host3.net&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;https://host4.net&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">addresses</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">ip_address</span><span class="o">=</span><span class="s1">&#39;10.1.1.1&#39;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s1">&#39;NC&#39;</span><span class="p">),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">ip_address</span><span class="o">=</span><span class="s1">&#39;10.1.1.2&#39;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s1">&#39;NC&#39;</span><span class="p">),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">ip_address</span><span class="o">=</span><span class="s1">&#39;10.1.1.3&#39;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s1">&#39;MA&#39;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">users</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;bob&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">addresses</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sue&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">addresses</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;jack&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">addresses</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;bill&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">addresses</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;jill&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">addresses</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;terry&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">addresses</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+    <span class="p">)</span>
+
+    <span class="n">request_data</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/login.html&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2000-01-01T00:00:00.000000Z&#39;</span><span class="p">),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/index.html&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2000-01-01T00:00:00.300000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/widgets/&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2000-01-01T00:00:03.000000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/login.html&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2000-01-01T00:12:00.000000Z&#39;</span><span class="p">),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/index.html&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2000-01-01T00:12:00.300000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/things/&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2000-01-01T00:15:00.000000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/widgets/&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2000-01-01T04:15:00.000000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/widgets/&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2000-01-01T05:15:00.000000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/midgets/&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2000-01-01T06:15:00.000000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/resources/&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2000-01-02T00:10:00.000000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/order.html&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2000-01-02T00:11:00.000000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/widgets/&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2000-01-02T00:12:00.000000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/resources/283907/&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2015-04-03T02:01:00.000000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/stuff&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2015-04-03T02:01:00.100000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/index.html&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2015-04-03T02:01:00.100000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/cart.html&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2015-04-03T02:01:00.500000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/order.html&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2015-04-03T02:01:00.600000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/login.html&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2015-04-03T02:01:00.700000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/resources/&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2015-04-03T02:01:00.800000Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/page.html&#39;</span><span class="p">,</span>
+             <span class="n">timestamp</span><span class="o">=</span><span class="s1">&#39;2015-04-03T22:11:00.826391Z&#39;</span><span class="p">,</span>
+             <span class="n">user</span><span class="o">=</span><span class="n">users</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+    <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="RequestQueryTestCase.setUpTestData"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.setUpTestData">[docs]</a>    <span class="k">def</span> <span class="nf">setUpTestData</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUpTestData</span><span class="p">()</span>
+        <span class="n">cls</span><span class="o">.</span><span class="n">requests</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">request_data</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">full_clean</span><span class="p">()</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">requests</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;request-list&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RequestQueryTestCase.test_pagination"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_pagination">[docs]</a>    <span class="k">def</span> <span class="nf">test_pagination</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request_data</span><span class="p">),</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;previous&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;next&#39;</span><span class="p">])</span></div>
+
+    <span class="c1"># TODO: Determine whether to make the API error on invalid parameter.</span>
+<span class="c1">#     def test_filter_invalid(self):</span>
+<span class="c1">#         data = dict(invalid=&#39;x&#39;)</span>
+<span class="c1">#         response = self.client.get(self.path, data)</span>
+<span class="c1">#         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)</span>
+
+<div class="viewcode-block" id="RequestQueryTestCase.test_filter_url"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_url">[docs]</a>    <span class="k">def</span> <span class="nf">test_filter_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/login.html&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="RequestQueryTestCase.test_filter_site"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_site">[docs]</a>    <span class="k">def</span> <span class="nf">test_filter_site</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">site</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;site&#39;</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="RequestQueryTestCase.test_filter_username"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_username">[docs]</a>    <span class="k">def</span> <span class="nf">test_filter_username</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="RequestQueryTestCase.test_filter_ip_address"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_ip_address">[docs]</a>    <span class="k">def</span> <span class="nf">test_filter_ip_address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">ip_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">addresses</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;ip_address&#39;</span><span class="p">])</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">][</span><span class="s1">&#39;ip_address&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;ip_address&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="RequestQueryTestCase.test_filter_state"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_state">[docs]</a>    <span class="k">def</span> <span class="nf">test_filter_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">addresses</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;state&#39;</span><span class="p">])</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">][</span><span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="RequestQueryTestCase.test_filter_timestamp"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_timestamp">[docs]</a>    <span class="k">def</span> <span class="nf">test_filter_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">precise</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">timestamp_0</span><span class="o">=</span><span class="n">precise</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+                    <span class="n">timestamp_1</span><span class="o">=</span><span class="n">precise</span><span class="o">.</span><span class="n">isoformat</span><span class="p">())</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]:</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTimestamp</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">precise</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestQueryTestCase.test_filter_timestamp_multiple"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_timestamp_multiple">[docs]</a>    <span class="k">def</span> <span class="nf">test_filter_timestamp_multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">precise</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100000</span><span class="p">,</span> <span class="n">UTC</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">timestamp_0</span><span class="o">=</span><span class="n">precise</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+                    <span class="n">timestamp_1</span><span class="o">=</span><span class="n">precise</span><span class="o">.</span><span class="n">isoformat</span><span class="p">())</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]:</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTimestamp</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">precise</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestQueryTestCase.test_filter_timestamp_range"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_timestamp_range">[docs]</a>    <span class="k">def</span> <span class="nf">test_filter_timestamp_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">timestamp_0</span><span class="o">=</span><span class="n">start</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%S.</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">),</span>
+                    <span class="n">timestamp_1</span><span class="o">=</span><span class="n">end</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%S.</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">no_z_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;timestamp_0&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;Z&#39;</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;timestamp_1&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;Z&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">no_z_data</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]:</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTimestamp</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertGreaterEqual</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertLessEqual</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestQueryTestCase.test_filter_timestamp_not_before"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_timestamp_not_before">[docs]</a>    <span class="k">def</span> <span class="nf">test_filter_timestamp_not_before</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">timestamp_0</span><span class="o">=</span><span class="n">start</span><span class="o">.</span><span class="n">isoformat</span><span class="p">())</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]:</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTimestamp</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertGreaterEqual</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestQueryTestCase.test_filter_timestamp_invalid_format"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_timestamp_invalid_format">[docs]</a>    <span class="k">def</span> <span class="nf">test_filter_timestamp_invalid_format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">timestamp_0</span><span class="o">=</span><span class="s1">&#39;invalid datetime format&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestQueryTestCase.test_filter_username_and_timestamp_not_after"><a class="viewcode-back" href="../../site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_username_and_timestamp_not_after">[docs]</a>    <span class="k">def</span> <span class="nf">test_filter_username_and_timestamp_not_after</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+                    <span class="n">timestamp_1</span><span class="o">=</span><span class="n">end</span><span class="o">.</span><span class="n">isoformat</span><span class="p">())</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                         <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">])</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTimestamp</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertLessEqual</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Craig Hurd-Rindy.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>site_analytics.views &mdash; Site Analytics 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Site Analytics 0.1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for site_analytics.views</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Views for the site_analytics project.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">mixins</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">viewsets</span>
+
+<span class="kn">from</span> <span class="nn">site_analytics._version</span> <span class="kn">import</span> <span class="n">__version__</span>
+<span class="kn">from</span> <span class="nn">site_analytics</span> <span class="kn">import</span> <span class="n">filters</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">serializers</span>
+
+
+<div class="viewcode-block" id="VersionViewSet"><a class="viewcode-back" href="../../site_analytics.views.html#site_analytics.views.VersionViewSet">[docs]</a><span class="k">class</span> <span class="nc">VersionViewSet</span><span class="p">(</span><span class="n">viewsets</span><span class="o">.</span><span class="n">ViewSet</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A GET on /version returns the version string.</span>
+
+<span class="sd">    A `ViewSet` is used for its automatic routing features, but the</span>
+<span class="sd">    ``list`` method is the only one implemented and returns an entity</span>
+<span class="sd">    that is not a collection, for which `ViewSet`\s are normally used.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="VersionViewSet.list"><a class="viewcode-back" href="../../site_analytics.views.html#site_analytics.views.VersionViewSet.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the service&#39;s version number.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span><span class="n">__version__</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="RequestViewSet"><a class="viewcode-back" href="../../site_analytics.views.html#site_analytics.views.RequestViewSet">[docs]</a><span class="k">class</span> <span class="nc">RequestViewSet</span><span class="p">(</span><span class="n">mixins</span><span class="o">.</span><span class="n">CreateModelMixin</span><span class="p">,</span>
+                     <span class="n">mixins</span><span class="o">.</span><span class="n">ListModelMixin</span><span class="p">,</span>
+                     <span class="n">mixins</span><span class="o">.</span><span class="n">RetrieveModelMixin</span><span class="p">,</span>
+                     <span class="n">viewsets</span><span class="o">.</span><span class="n">GenericViewSet</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;The view set used for the /requests collection.&quot;&quot;&quot;</span>
+
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-timestamp&#39;</span><span class="p">,</span> <span class="s1">&#39;-id&#39;</span><span class="p">)</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">RequestSerializer</span>
+    <span class="n">filter_class</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">RequestFilter</span></div>
+
+    <span class="c1"># TODO: Add security; limit results to user&#39;s own requests if non-staff.</span>
+    <span class="c1"># This assumes that authentication is shared among all services.</span>
+    <span class="c1"># To see any unauthenticated requests (no user or no name in user), the</span>
+    <span class="c1"># user would have to be staff.</span>
+
+<span class="c1">#     # from rest_framework import permissions</span>
+<span class="c1">#     permission_classes = permissions.IsAuthenticated,</span>
+<span class="c1">#</span>
+<span class="c1">#     def get_queryset(self):</span>
+<span class="c1">#         result = super().get_queryset()</span>
+<span class="c1">#         user = self.request.user</span>
+<span class="c1">#         if not user.is_staff:</span>
+<span class="c1">#             result = result.filter(data__user__name=user.username)</span>
+<span class="c1">#         return result</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Craig Hurd-Rindy.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+    </div>
+  </body>
+</html>

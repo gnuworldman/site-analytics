@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>site_analytics.filters &mdash; Site Analytics 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Site Analytics 0.1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for site_analytics.filters</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Filters for the site_analytics project.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+<span class="kn">from</span> <span class="nn">django_filters</span> <span class="kn">import</span> <span class="n">fields</span><span class="p">,</span> <span class="n">filters</span><span class="p">,</span> <span class="n">filterset</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">exceptions</span>
+
+<span class="kn">from</span> <span class="nn">site_analytics</span> <span class="kn">import</span> <span class="n">models</span>
+
+
+<div class="viewcode-block" id="IsoDateTimeRangeField"><a class="viewcode-back" href="../../site_analytics.filters.html#site_analytics.filters.IsoDateTimeRangeField">[docs]</a><span class="k">class</span> <span class="nc">IsoDateTimeRangeField</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">RangeField</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Field for a datetime range in ISO-8601 format.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">((</span><span class="n">fields</span><span class="o">.</span><span class="n">IsoDateTimeField</span><span class="p">(),</span>
+                          <span class="n">fields</span><span class="o">.</span><span class="n">IsoDateTimeField</span><span class="p">()),</span>
+                         <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IsoDateTimeFromToRangeFilter"><a class="viewcode-back" href="../../site_analytics.filters.html#site_analytics.filters.IsoDateTimeFromToRangeFilter">[docs]</a><span class="k">class</span> <span class="nc">IsoDateTimeFromToRangeFilter</span><span class="p">(</span><span class="n">filters</span><span class="o">.</span><span class="n">DateTimeFromToRangeFilter</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Filter for a datetime range in ISO-8601 format.&quot;&quot;&quot;</span>
+
+    <span class="n">field_class</span> <span class="o">=</span> <span class="n">IsoDateTimeRangeField</span></div>
+
+
+<div class="viewcode-block" id="RequestFilter"><a class="viewcode-back" href="../../site_analytics.filters.html#site_analytics.filters.RequestFilter">[docs]</a><span class="k">class</span> <span class="nc">RequestFilter</span><span class="p">(</span><span class="n">filterset</span><span class="o">.</span><span class="n">FilterSet</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Set of filters for the `~site_analytics.models.Request` model.</span>
+
+<span class="sd">    The ``site`` parameter can be used to filter requests that have a</span>
+<span class="sd">    ``url`` within the site (scheme &amp; authority) argument.</span>
+
+<span class="sd">    The ``timestamp_0`` parameter can be used to filter requests that</span>
+<span class="sd">    were made on or after the argument.  The ``timestamp_1`` parameter</span>
+<span class="sd">    can be used to filter requests that were made on or before the</span>
+<span class="sd">    argument.  Values for each of these parameters must be in ISO-8601</span>
+<span class="sd">    date/time format.</span>
+
+<span class="sd">    The ``username`` parameter can be used to filter requests that were</span>
+<span class="sd">    made by the user identified by the argument.</span>
+
+<span class="sd">    The ``ip_address`` parameter can be used to filter requests that were</span>
+<span class="sd">    made from the specified IP address.</span>
+
+<span class="sd">    The ``state`` parameter can be used to filter requests that were made</span>
+<span class="sd">    from the specified state (two-character upper-case abbreviation).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">strict</span> <span class="o">=</span> <span class="n">filterset</span><span class="o">.</span><span class="n">STRICTNESS</span><span class="o">.</span><span class="n">RAISE_VALIDATION_ERROR</span>
+
+    <span class="n">site</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">CharFilter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="n">lookup_expr</span><span class="o">=</span><span class="s1">&#39;site&#39;</span><span class="p">)</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">IsoDateTimeFromToRangeFilter</span><span class="p">()</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">CharFilter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">lookup_expr</span><span class="o">=</span><span class="s1">&#39;user__name&#39;</span><span class="p">)</span>
+    <span class="n">ip_address</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">CharFilter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                                    <span class="n">lookup_expr</span><span class="o">=</span><span class="s1">&#39;user__ip_address&#39;</span><span class="p">)</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">CharFilter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">lookup_expr</span><span class="o">=</span><span class="s1">&#39;user__state&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RequestFilter.Meta"><a class="viewcode-back" href="../../site_analytics.filters.html#site_analytics.filters.RequestFilter.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Request</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="s1">&#39;site&#39;</span><span class="p">,</span> <span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;ip_address&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">qs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Override to produce a REST Framework ValidationError.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">qs</span>
+        <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">error_dict</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Craig Hurd-Rindy.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+    </div>
+  </body>
+</html>

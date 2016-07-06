@@ -1,0 +1,7 @@
+site_analytics.tests module
+===========================
+
+.. automodule:: site_analytics.tests
+    :members:
+    :undoc-members:
+    :show-inheritance:

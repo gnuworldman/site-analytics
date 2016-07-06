@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Request information &mdash; Site Analytics 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Site Analytics 0.1.0 documentation" href="index.html" />
+    <link rel="next" title="Release Notes" href="notes.html" />
+    <link rel="prev" title="Running" href="running.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="notes.html" title="Release Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="running.html" title="Running"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="request-information">
+<h1>Request information<a class="headerlink" href="#request-information" title="Permalink to this headline">¶</a></h1>
+<p>Each request contains at least the following fields:</p>
+<dl class="docutils">
+<dt>url</dt>
+<dd>the request&#8217;s absolute URL</dd>
+<dt>timestamp</dt>
+<dd>the time at which the request was made or persisted</dd>
+</dl>
+<p>Any additional fields related to the request are stored in the
+<code class="xref py py-attr docutils literal"><span class="pre">data</span></code>
+(<a class="reference external" href="https://www.postgresql.org/docs/9.5/static/datatype-json.html">jsonb</a>)
+field.  See the <a class="reference internal" href="site_analytics.models.html#site_analytics.models.Request" title="site_analytics.models.Request"><code class="xref py py-class docutils literal"><span class="pre">Request</span></code></a> model docstring for
+pertinent information regarding the request entity&#8217;s <code class="docutils literal"><span class="pre">user</span></code> field.</p>
+<p>When persisted requests are retrieved, a field called <code class="docutils literal"><span class="pre">self</span></code> that contains
+the URL of the request resource is also included.</p>
+</div>
+<div class="section" id="api-calls">
+<h1>API calls<a class="headerlink" href="#api-calls" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="post-requests">
+<h2>POST /requests<a class="headerlink" href="#post-requests" title="Permalink to this headline">¶</a></h2>
+<p>Store the details related to a request.  The <code class="docutils literal"><span class="pre">url</span></code> field is required, and the
+<code class="docutils literal"><span class="pre">timestamp</span></code> field defaults to the current date and time.  Any other fields in
+the payload are also persisted.</p>
+</div>
+<div class="section" id="get-requests">
+<h2>GET /requests<a class="headerlink" href="#get-requests" title="Permalink to this headline">¶</a></h2>
+<p>Return a pagination object (default page size is 10) with the following fields:</p>
+<dl class="docutils">
+<dt>count</dt>
+<dd>the total number of (matching, if filtered) requests</dd>
+<dt>previous</dt>
+<dd>the URL of the previous page (<code class="xref py py-obj docutils literal"><span class="pre">null</span></code> if this is the first page)</dd>
+<dt>next</dt>
+<dd>the URL of the next page (<code class="xref py py-obj docutils literal"><span class="pre">null</span></code> if this is the last page)</dd>
+<dt>results</dt>
+<dd>array of (matching, if filtered) stored requests on this page &#8211; each element
+is the same object as returned by calling the GET method on the entity&#8217;s URL
+(<code class="docutils literal"><span class="pre">self</span></code> field)</dd>
+</dl>
+<p>This call supports filtering with query parameters.  See
+<a class="reference internal" href="site_analytics.filters.html#site_analytics.filters.RequestFilter" title="site_analytics.filters.RequestFilter"><code class="xref py py-obj docutils literal"><span class="pre">RequestFilter</span></code></a> for details.</p>
+</div>
+<div class="section" id="get-requests-id">
+<h2>GET /requests/{id}<a class="headerlink" href="#get-requests-id" title="Permalink to this headline">¶</a></h2>
+<p>Return an object with all of the data given when the request was persisted
+along with the <code class="docutils literal"><span class="pre">self</span></code> field.</p>
+</div>
+<div class="section" id="get-version">
+<h2>GET /version<a class="headerlink" href="#get-version" title="Permalink to this headline">¶</a></h2>
+<p>Return a string containing the version number of the service.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Request information</a></li>
+<li><a class="reference internal" href="#api-calls">API calls</a><ul>
+<li><a class="reference internal" href="#post-requests">POST /requests</a></li>
+<li><a class="reference internal" href="#get-requests">GET /requests</a></li>
+<li><a class="reference internal" href="#get-requests-id">GET /requests/{id}</a></li>
+<li><a class="reference internal" href="#get-version">GET /version</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="running.html"
+                        title="previous chapter">Running</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="notes.html"
+                        title="next chapter">Release Notes</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/api.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="notes.html" title="Release Notes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="running.html" title="Running"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Craig Hurd-Rindy.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+    </div>
+  </body>
+</html>

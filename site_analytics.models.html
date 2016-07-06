@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>site_analytics.models module &mdash; Site Analytics 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Site Analytics 0.1.0 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-site_analytics.models">
+<span id="site-analytics-models-module"></span><h1>site_analytics.models module<a class="headerlink" href="#module-site_analytics.models" title="Permalink to this headline">¶</a></h1>
+<p>Models for the site_analytics project.</p>
+<dl class="class">
+<dt id="site_analytics.models.Request">
+<em class="property">class </em><code class="descclassname">site_analytics.models.</code><code class="descname">Request</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/models.html#Request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.models.Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>A request whose details are sent by the service processing it.</p>
+<p>A service that processes an incoming request posts to this service,
+which persists the posted data via this model.</p>
+<p>The requested URL (the <code class="xref py py-attr docutils literal"><span class="pre">url</span></code> field) is required.  The
+timestamp field may be specified and defaults to the current time.
+The remainder of posted data goes into the <code class="xref py py-attr docutils literal"><span class="pre">data</span></code> field.  If
+the user is identified in any way by the processing service, then
+that data should be specified as an object in the <code class="xref py py-obj docutils literal"><span class="pre">user</span></code> field.  If
+the client IP address is known and should be saved, then it should
+be specified in the <code class="xref py py-obj docutils literal"><span class="pre">ip_address</span></code> field of the user object.  If the
+U.S. state of the origin of the request is known and should be
+saved, then it should be specified in the <code class="xref py py-obj docutils literal"><span class="pre">state</span></code> field of the user
+object.  If the request was made by a particular user and should be
+saved, then the username should be specified in the <code class="xref py py-obj docutils literal"><span class="pre">name</span></code> field of
+the user object.  These three special fields of the user object can
+be used to filter requests with query parameters to a GET on the
+requests collection; see <a class="reference internal" href="site_analytics.filters.html#site_analytics.filters.RequestFilter" title="site_analytics.filters.RequestFilter"><code class="xref py py-obj docutils literal"><span class="pre">RequestFilter</span></code></a>
+for details.</p>
+<dl class="exception">
+<dt id="site_analytics.models.Request.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#site_analytics.models.Request.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/1.9/_objects/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v1.9)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="site_analytics.models.Request.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Request.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#site_analytics.models.Request.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/1.9/_objects/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v1.9)"><code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="site_analytics.models.Request.get_next_by_timestamp">
+<code class="descclassname">Request.</code><code class="descname">get_next_by_timestamp</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#site_analytics.models.Request.get_next_by_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="site_analytics.models.Request.get_previous_by_timestamp">
+<code class="descclassname">Request.</code><code class="descname">get_previous_by_timestamp</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#site_analytics.models.Request.get_previous_by_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="site_analytics.models.Request.objects">
+<code class="descclassname">Request.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#site_analytics.models.Request.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/site_analytics.models.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Craig Hurd-Rindy.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+    </div>
+  </body>
+</html>

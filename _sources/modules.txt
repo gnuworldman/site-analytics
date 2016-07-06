@@ -1,0 +1,7 @@
+site_analytics
+==============
+
+.. toctree::
+   :maxdepth: 4
+
+   site_analytics

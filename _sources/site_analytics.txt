@@ -1,0 +1,34 @@
+site_analytics package
+======================
+
+.. automodule:: site_analytics
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    site_analytics.migrations
+
+Submodules
+----------
+
+.. toctree::
+
+   site_analytics.admin
+   site_analytics.apps
+   site_analytics.filters
+   site_analytics.manage
+   site_analytics.models
+   site_analytics.serializers
+   site_analytics.settings
+   site_analytics.settings_local
+   site_analytics.tests
+   site_analytics.transforms
+   site_analytics.urls
+   site_analytics.views
+   site_analytics.wsgi
+

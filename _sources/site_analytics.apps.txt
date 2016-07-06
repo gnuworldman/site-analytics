@@ -1,0 +1,7 @@
+site_analytics.apps module
+==========================
+
+.. automodule:: site_analytics.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:

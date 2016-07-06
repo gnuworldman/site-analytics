@@ -1,0 +1,7 @@
+site_analytics.wsgi module
+==========================
+
+.. automodule:: site_analytics.wsgi
+    :members:
+    :undoc-members:
+    :show-inheritance:

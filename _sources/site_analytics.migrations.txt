@@ -1,0 +1,15 @@
+site_analytics.migrations package
+=================================
+
+.. automodule:: site_analytics.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+
+   site_analytics.migrations.0001_initial
+

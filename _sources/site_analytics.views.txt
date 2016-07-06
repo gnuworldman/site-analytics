@@ -1,0 +1,7 @@
+site_analytics.views module
+===========================
+
+.. automodule:: site_analytics.views
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>site_analytics.migrations.0001_initial &mdash; Site Analytics 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Site Analytics 0.1.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for site_analytics.migrations.0001_initial</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The initial migration for the site_analytics project.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">django.contrib.postgres.fields.jsonb</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">migrations</span><span class="p">,</span> <span class="n">models</span>
+<span class="kn">import</span> <span class="nn">django.utils.timezone</span>
+
+
+<span class="n">SQL_FUNCTION_URL_SITE</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">create</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;CREATE OR REPLACE FUNCTION url_site(url VARCHAR)</span>
+<span class="s2">RETURNS VARCHAR</span>
+<span class="s2">LANGUAGE plpgsql</span>
+<span class="s2">IMMUTABLE</span>
+<span class="s2">RETURNS NULL ON NULL INPUT</span>
+<span class="s2">AS $$</span>
+<span class="s2">BEGIN</span>
+<span class="s2">    RETURN SUBSTRING(url FROM &#39;^[^:]+://[^/]+&#39;);</span>
+<span class="s2">END;</span>
+<span class="s2">$$;&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">drop</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;DROP FUNCTION url_site(VARCHAR);&quot;&quot;&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="Migration"><a class="viewcode-back" href="../../../site_analytics.migrations.0001_initial.html#site_analytics.migrations.0001_initial.Migration">[docs]</a><span class="k">class</span> <span class="nc">Migration</span><span class="p">(</span><span class="n">migrations</span><span class="o">.</span><span class="n">Migration</span><span class="p">):</span>
+
+    <span class="n">initial</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="n">dependencies</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">]</span>
+
+    <span class="n">operations</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">migrations</span><span class="o">.</span><span class="n">CreateModel</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Request&#39;</span><span class="p">,</span>
+            <span class="n">fields</span><span class="o">=</span><span class="p">[</span>
+                <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">(</span>
+                    <span class="n">auto_created</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                    <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                    <span class="n">serialize</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                    <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)),</span>
+                <span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">URLField</span><span class="p">(</span>
+                    <span class="n">db_index</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                    <span class="n">help_text</span><span class="o">=</span><span class="s1">&#39;The absolute URL of the request&#39;</span><span class="p">,</span>
+                    <span class="n">max_length</span><span class="o">=</span><span class="mi">2000</span><span class="p">)),</span>
+                <span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span>
+                    <span class="n">db_index</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                    <span class="n">default</span><span class="o">=</span><span class="n">django</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">,</span>
+                    <span class="n">help_text</span><span class="o">=</span><span class="s1">&#39;The time at which the request was made&#39;</span><span class="p">)),</span>
+                <span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">django</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">postgres</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">jsonb</span><span class="o">.</span><span class="n">JSONField</span><span class="p">(</span>
+                    <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                    <span class="n">default</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
+                    <span class="n">help_text</span><span class="o">=</span><span class="s1">&#39;Additional data related to the request&#39;</span><span class="p">)),</span>
+            <span class="p">],</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">{</span>
+                <span class="s1">&#39;db_table&#39;</span><span class="p">:</span> <span class="s1">&#39;request&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">),</span>
+        <span class="n">migrations</span><span class="o">.</span><span class="n">RunSQL</span><span class="p">(</span>
+            <span class="n">SQL_FUNCTION_URL_SITE</span><span class="p">[</span><span class="s1">&#39;create&#39;</span><span class="p">],</span>
+            <span class="n">SQL_FUNCTION_URL_SITE</span><span class="p">[</span><span class="s1">&#39;drop&#39;</span><span class="p">]</span>
+        <span class="p">),</span>
+        <span class="n">migrations</span><span class="o">.</span><span class="n">RunSQL</span><span class="p">(</span>
+            <span class="s2">&quot;CREATE INDEX request_data_index ON request USING GIN (data);&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DROP INDEX request_data_index;&quot;</span>
+        <span class="p">),</span>
+        <span class="n">migrations</span><span class="o">.</span><span class="n">RunSQL</span><span class="p">(</span>
+            <span class="s2">&quot;CREATE INDEX request_url_site ON request (url_site(url));&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DROP INDEX request_url_site;&quot;</span>
+        <span class="p">),</span>
+    <span class="p">]</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Craig Hurd-Rindy.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+    </div>
+  </body>
+</html>

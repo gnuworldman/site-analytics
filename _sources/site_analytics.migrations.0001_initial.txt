@@ -1,0 +1,7 @@
+site_analytics.migrations.0001_initial module
+=============================================
+
+.. automodule:: site_analytics.migrations.0001_initial
+    :members:
+    :undoc-members:
+    :show-inheritance:

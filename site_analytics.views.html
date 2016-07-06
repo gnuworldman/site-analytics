@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>site_analytics.views module &mdash; Site Analytics 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Site Analytics 0.1.0 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-site_analytics.views">
+<span id="site-analytics-views-module"></span><h1>site_analytics.views module<a class="headerlink" href="#module-site_analytics.views" title="Permalink to this headline">¶</a></h1>
+<p>Views for the site_analytics project.</p>
+<dl class="class">
+<dt id="site_analytics.views.VersionViewSet">
+<em class="property">class </em><code class="descclassname">site_analytics.views.</code><code class="descname">VersionViewSet</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/views.html#VersionViewSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.views.VersionViewSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.viewsets.ViewSet</span></code></p>
+<p>A GET on /version returns the version string.</p>
+<p>A <code class="xref py py-obj docutils literal"><span class="pre">ViewSet</span></code> is used for its automatic routing features, but the
+<code class="docutils literal"><span class="pre">list</span></code> method is the only one implemented and returns an entity
+that is not a collection, for which <code class="xref py py-obj docutils literal"><span class="pre">ViewSet</span></code>s are normally used.</p>
+<dl class="method">
+<dt id="site_analytics.views.VersionViewSet.list">
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/views.html#VersionViewSet.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.views.VersionViewSet.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the service&#8217;s version number.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="site_analytics.views.VersionViewSet.suffix">
+<code class="descname">suffix</code><em class="property"> = None</em><a class="headerlink" href="#site_analytics.views.VersionViewSet.suffix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="site_analytics.views.RequestViewSet">
+<em class="property">class </em><code class="descclassname">site_analytics.views.</code><code class="descname">RequestViewSet</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/views.html#RequestViewSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.views.RequestViewSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.mixins.CreateModelMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">rest_framework.mixins.ListModelMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">rest_framework.mixins.RetrieveModelMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">rest_framework.viewsets.GenericViewSet</span></code></p>
+<p>The view set used for the /requests collection.</p>
+<dl class="attribute">
+<dt id="site_analytics.views.RequestViewSet.queryset">
+<code class="descname">queryset</code><em class="property"> = [&lt;Request: Request 2&gt;, &lt;Request: Request 1&gt;]</em><a class="headerlink" href="#site_analytics.views.RequestViewSet.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="site_analytics.views.RequestViewSet.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#site_analytics.views.RequestViewSet.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RequestSerializer</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="site_analytics.views.RequestViewSet.filter_class">
+<code class="descname">filter_class</code><a class="headerlink" href="#site_analytics.views.RequestViewSet.filter_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RequestFilter</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="site_analytics.views.RequestViewSet.suffix">
+<code class="descname">suffix</code><em class="property"> = None</em><a class="headerlink" href="#site_analytics.views.RequestViewSet.suffix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/site_analytics.views.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Craig Hurd-Rindy.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+    </div>
+  </body>
+</html>

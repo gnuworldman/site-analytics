@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>site_analytics.filters module &mdash; Site Analytics 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Site Analytics 0.1.0 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-site_analytics.filters">
+<span id="site-analytics-filters-module"></span><h1>site_analytics.filters module<a class="headerlink" href="#module-site_analytics.filters" title="Permalink to this headline">¶</a></h1>
+<p>Filters for the site_analytics project.</p>
+<dl class="class">
+<dt id="site_analytics.filters.IsoDateTimeRangeField">
+<em class="property">class </em><code class="descclassname">site_analytics.filters.</code><code class="descname">IsoDateTimeRangeField</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/filters.html#IsoDateTimeRangeField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.filters.IsoDateTimeRangeField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django_filters.fields.RangeField</span></code></p>
+<p>Field for a datetime range in ISO-8601 format.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="site_analytics.filters.IsoDateTimeFromToRangeFilter">
+<em class="property">class </em><code class="descclassname">site_analytics.filters.</code><code class="descname">IsoDateTimeFromToRangeFilter</code><span class="sig-paren">(</span><em>name=None</em>, <em>label=None</em>, <em>widget=None</em>, <em>action=None</em>, <em>lookup_expr='exact'</em>, <em>required=False</em>, <em>distinct=False</em>, <em>exclude=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/filters.html#IsoDateTimeFromToRangeFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.filters.IsoDateTimeFromToRangeFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django_filters.filters.DateTimeFromToRangeFilter</span></code></p>
+<p>Filter for a datetime range in ISO-8601 format.</p>
+<dl class="attribute">
+<dt id="site_analytics.filters.IsoDateTimeFromToRangeFilter.field_class">
+<code class="descname">field_class</code><a class="headerlink" href="#site_analytics.filters.IsoDateTimeFromToRangeFilter.field_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#site_analytics.filters.IsoDateTimeRangeField" title="site_analytics.filters.IsoDateTimeRangeField"><code class="xref py py-class docutils literal"><span class="pre">IsoDateTimeRangeField</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="site_analytics.filters.RequestFilter">
+<em class="property">class </em><code class="descclassname">site_analytics.filters.</code><code class="descname">RequestFilter</code><span class="sig-paren">(</span><em>data=None</em>, <em>queryset=None</em>, <em>prefix=None</em>, <em>strict=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/filters.html#RequestFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.filters.RequestFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django_filters.filterset.FilterSet</span></code></p>
+<p>Set of filters for the <a class="reference internal" href="site_analytics.models.html#site_analytics.models.Request" title="site_analytics.models.Request"><code class="xref py py-obj docutils literal"><span class="pre">Request</span></code></a> model.</p>
+<p>The <code class="docutils literal"><span class="pre">site</span></code> parameter can be used to filter requests that have a
+<code class="docutils literal"><span class="pre">url</span></code> within the site (scheme &amp; authority) argument.</p>
+<p>The <code class="docutils literal"><span class="pre">timestamp_0</span></code> parameter can be used to filter requests that
+were made on or after the argument.  The <code class="docutils literal"><span class="pre">timestamp_1</span></code> parameter
+can be used to filter requests that were made on or before the
+argument.  Values for each of these parameters must be in ISO-8601
+date/time format.</p>
+<p>The <code class="docutils literal"><span class="pre">username</span></code> parameter can be used to filter requests that were
+made by the user identified by the argument.</p>
+<p>The <code class="docutils literal"><span class="pre">ip_address</span></code> parameter can be used to filter requests that were
+made from the specified IP address.</p>
+<p>The <code class="docutils literal"><span class="pre">state</span></code> parameter can be used to filter requests that were made
+from the specified state (two-character upper-case abbreviation).</p>
+<dl class="attribute">
+<dt id="site_analytics.filters.RequestFilter.strict">
+<code class="descname">strict</code><em class="property"> = 'RAISE'</em><a class="headerlink" href="#site_analytics.filters.RequestFilter.strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="site_analytics.filters.RequestFilter.Meta">
+<em class="property">class </em><code class="descname">Meta</code><a class="reference internal" href="_modules/site_analytics/filters.html#RequestFilter.Meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.filters.RequestFilter.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="attribute">
+<dt id="site_analytics.filters.RequestFilter.Meta.model">
+<code class="descname">model</code><a class="headerlink" href="#site_analytics.filters.RequestFilter.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">Request</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="site_analytics.filters.RequestFilter.Meta.fields">
+<code class="descname">fields</code><em class="property"> = ('url', 'site', 'timestamp', 'username', 'ip_address', 'state')</em><a class="headerlink" href="#site_analytics.filters.RequestFilter.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="site_analytics.filters.RequestFilter.qs">
+<code class="descclassname">RequestFilter.</code><code class="descname">qs</code><a class="headerlink" href="#site_analytics.filters.RequestFilter.qs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override to produce a REST Framework ValidationError.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="site_analytics.filters.RequestFilter.base_filters">
+<code class="descclassname">RequestFilter.</code><code class="descname">base_filters</code><em class="property"> = OrderedDict([('url', &lt;django_filters.filters.CharFilter object&gt;), ('site', &lt;django_filters.filters.CharFilter object&gt;), ('timestamp', &lt;site_analytics.filters.IsoDateTimeFromToRangeFilter object&gt;), ('username', &lt;django_filters.filters.CharFilter object&gt;), ('ip_address', &lt;django_filters.filters.CharFilter object&gt;), ('state', &lt;django_filters.filters.CharFilter object&gt;)])</em><a class="headerlink" href="#site_analytics.filters.RequestFilter.base_filters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="site_analytics.filters.RequestFilter.declared_filters">
+<code class="descclassname">RequestFilter.</code><code class="descname">declared_filters</code><em class="property"> = OrderedDict([('site', &lt;django_filters.filters.CharFilter object&gt;), ('timestamp', &lt;site_analytics.filters.IsoDateTimeFromToRangeFilter object&gt;), ('username', &lt;django_filters.filters.CharFilter object&gt;), ('ip_address', &lt;django_filters.filters.CharFilter object&gt;), ('state', &lt;django_filters.filters.CharFilter object&gt;)])</em><a class="headerlink" href="#site_analytics.filters.RequestFilter.declared_filters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/site_analytics.filters.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Craig Hurd-Rindy.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+    </div>
+  </body>
+</html>

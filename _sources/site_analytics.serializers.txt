@@ -1,0 +1,7 @@
+site_analytics.serializers module
+=================================
+
+.. automodule:: site_analytics.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
