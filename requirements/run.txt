@@ -1,4 +1,0 @@
-Django<1.10
-django-filter
-djangorestframework
-psycopg2

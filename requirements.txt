@@ -1,4 +1,0 @@
--r requirements/run.txt
--r requirements/test.txt
--r requirements/doc.txt
--r requirements/package.txt
