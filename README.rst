@@ -1,5 +1,8 @@
-The site_analytics package contains the Site Analytics application, whose main
-purpose is its RESTful API service described in the documentation.
+Site Analytics is a RESTful API service that persists and retrieves data
+related to requests.  The best way to use it is to have the services that are
+processing web requests post all pertinent information about the requests to
+this service where the data is persisted and can then be retrieved and filtered
+to gain analytical insights.
 
 The `source <https://github.com/gnuworldman/site-analytics/tree/master>`_,
 `documentation <http://gnuworldman.github.io/site-analytics/>`_,
