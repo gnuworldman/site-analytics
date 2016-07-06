@@ -4,6 +4,11 @@
 # collected static files
 /src/site_analytics/static_root/
 
+# generated documentation
+/doc/_build/
+/doc/modules.rst
+/doc/site_analytics*.rst
+
 # local developer space
 /local/
 
