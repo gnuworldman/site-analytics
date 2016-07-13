@@ -1,6 +1,6 @@
 """Views for the site_analytics project."""
 
-from rest_framework import mixins, response, viewsets
+from rest_framework import mixins, renderers, response, views, viewsets
 
 from site_analytics._version import __version__
 from site_analytics import filters, models, serializers
@@ -46,3 +46,40 @@ class RequestViewSet(mixins.CreateModelMixin,
 #         if not user.is_staff:
 #             result = result.filter(data__user__name=user.username)
 #         return result
+
+
+class SummaryView(views.APIView):
+
+    renderer_classes = renderers.TemplateHTMLRenderer,
+    template_name = 'site_analytics/summary.html'
+
+    def get(self, request, *args, **kwargs):  # pragma: no cover
+        manager = models.Request.objects
+        data = dict(
+            totals=dict(
+                requests=manager.count(),
+                auth_users=manager.get_user_count('name'),
+                states=manager.get_user_count('geoip__region'),
+                ip_addresses=manager.get_user_count('ip_address'),
+            ),
+            tops=dict(
+                auth_users=manager.get_user_counts('name'),
+                states=manager.get_user_counts('geoip__region'),
+                ip_addresses=manager.get_user_counts('ip_address'),
+            ),
+        )
+        return response.Response(data)
+
+
+class FilterView(views.APIView):
+
+    renderer_classes = renderers.TemplateHTMLRenderer,
+    template_name = 'site_analytics/filter.html'
+
+    def get(self, request, *args, **kwargs):  # pragma: no cover
+        params = request.query_params
+        qs = models.Request.objects.all()
+        if not params:
+            qs = qs.none()
+        data = dict(filter=filters.RequestFilter(params, qs))
+        return response.Response(data)

@@ -1,0 +1,21 @@
+{% extends "site_analytics/base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+	<link rel="stylesheet" href="{% static "admin/css/forms.css" %}" />
+	<form action="" method="get">
+		{{ filter.form.as_p }}
+		<input type="submit" />
+	</form>
+	{% if filter|length %}
+		<br>
+		<table>
+			<caption>Matching requests</caption>
+			<tr><th>URL<th>Timestamp<th>Other data
+			{% for obj in filter %}
+				<tr><td>{{ obj.url }}<td>{{ obj.timestamp }}<td>{{ obj.data|pprint }}
+			{% endfor %}
+		</table>
+	{% endif %}
+{% endblock %}

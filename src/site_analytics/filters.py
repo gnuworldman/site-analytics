@@ -45,6 +45,8 @@ class RequestFilter(filterset.FilterSet):
 
     The ``state`` parameter can be used to filter requests that were made
     from the specified state (two-character upper-case abbreviation).
+    This value resides in the ``region`` field of the object in the
+    ``geoip`` field of the object in the ``user`` field.
 
     """
 
@@ -55,7 +57,7 @@ class RequestFilter(filterset.FilterSet):
     username = filters.CharFilter(name='data', lookup_expr='user__name')
     ip_address = filters.CharFilter(name='data',
                                     lookup_expr='user__ip_address')
-    state = filters.CharFilter(name='data', lookup_expr='user__state')
+    state = filters.CharFilter(name='data', lookup_expr='user__geoip__region')
 
     class Meta:
 

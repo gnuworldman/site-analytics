@@ -1,0 +1,37 @@
+{% extends "site_analytics/base.html" %}
+
+{% block title %}Site Analytics - Summary{% endblock %}
+
+{% block content %}
+	<table>
+		<caption>Totals</caption>
+		<tr><td>requests<td class="align-right">{{ totals.requests }}
+		<tr><td>authenticated users<td class="align-right">{{ totals.auth_users }}
+		<tr><td>states<td class="align-right">{{ totals.states }}
+		<tr><td>IP addresses<td class="align-right">{{ totals.ip_addresses }}
+	</table>
+	<br><hr><br>
+	<table>
+		<caption>Top authenticated users</caption>
+		<tr><th>username<th>requests
+		{% for key, count in tops.auth_users.items %}
+			<tr><td>{{ key }}<td class="align-right">{{ count }}
+		{% endfor %}
+	</table>
+	<br><hr><br>
+	<table>
+		<caption>Top states</caption>
+		<tr><th>state<th>requests
+		{% for key, count in tops.states.items %}
+			<tr><td>{{ key }}<td class="align-right">{{ count }}
+		{% endfor %}
+	</table>
+	<br><hr><br>
+	<table>
+		<caption>Top IP addresses</caption>
+		<tr><th>IP address<th>requests
+		{% for key, count in tops.ip_addresses.items %}
+			<tr><td>{{ key }}<td class="align-right">{{ count }}
+		{% endfor %}
+	</table>
+{% endblock %}

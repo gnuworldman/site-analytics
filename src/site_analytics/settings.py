@@ -3,7 +3,9 @@
 import os
 
 
-ALLOWED_HOSTS = ['127.0.0.1']
+# Site Analytics settings
+
+SITEANALYTICS_DASHBOARD_TOP_N = 5
 
 
 # Application definition
@@ -32,8 +34,6 @@ MIDDLEWARE_CLASSES = [
 
 ROOT_URLCONF = 'site_analytics.urls'
 
-SECRET_KEY = '1l8=#(x54(wg=y-=z*d@5mz*13wljew4_0dwq2#a7b$$539q!='
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -51,6 +51,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'site_analytics.wsgi.application'
+
+
+# Security
+
+ALLOWED_HOSTS = ['127.0.0.1']
+
+SECRET_KEY = '1l8=#(x54(wg=y-=z*d@5mz*13wljew4_0dwq2#a7b$$539q!='
 
 
 # Database
@@ -99,6 +106,13 @@ USE_TZ = True
 project_package_dir = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(project_package_dir, 'static_root')
 STATIC_URL = '/static/'
+
+
+# GeoIP2
+# https://docs.djangoproject.com/en/1.9/ref/contrib/gis/geoip2/
+
+project_dir = os.path.dirname(os.path.dirname(project_package_dir))
+GEOIP_PATH = os.path.join(project_dir, 'data', 'geoip2')
 
 
 # Django REST Framework

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <title>{% block title %}Site Analytics{% endblock %}</title>
+	<link rel="stylesheet" href="{% static "admin/css/base.css" %}" />
+</head>
+
+<body>
+    <div id="sidebar">
+        {% block sidebar %}
+        <ul>
+            <li><a href="/summary.html">Summary</a></li>
+            <li><a href="/filter.html">Filter</a></li>
+            <li><a href="/">API root</a></li>
+        </ul>
+        {% endblock %}
+    </div>
+
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

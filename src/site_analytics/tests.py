@@ -17,12 +17,77 @@ from site_analytics._version import __version__
 
 class RequestModelTestCase(TestCase):
 
+    def create_request(self, **data):
+        obj = models.Request(**data)
+        obj.full_clean()
+        obj.save()
+        return obj
+
     def test_str(self):
         obj = models.Request(url='https://host.net/')
         obj.full_clean()
         self.assertEqual("Request object", str(obj))
         obj.save()
         self.assertEqual("Request {}".format(obj.pk), str(obj))
+
+    def test_set_geoip_data(self):
+        obj = self.create_request(url='https://host.net/',
+                                  data=dict(user=dict(ip_address='9.8.7.6')))
+        self.assertEqual('NC', obj.data['user']['geoip']['region'])
+
+    def test_set_geoip_data_private_address(self):
+        obj = self.create_request(url='https://host.net/',
+                                  data=dict(user=dict(ip_address='10.1.1.2')))
+        self.assertNotIn('geoip', obj.data['user'])
+
+    def test_set_geoip_data_no_user(self):
+        obj = self.create_request(url='https://host.net/',
+                                  data=dict(other='stuff'))
+        self.assertNotIn('user', obj.data)
+
+    def test_set_geoip_data_no_ip_address(self):
+        obj = self.create_request(url='https://host.net/',
+                                  data=dict(user=dict(name='oscar')))
+        self.assertNotIn('geoip', obj.data['user'])
+
+    def test_set_geoip_data_do_not_overwrite(self):
+        obj = self.create_request(url='https://host.net/',
+                                  data=dict(user=dict(name='oscar',
+                                                      geoip=42)))
+        self.assertEqual(42, obj.data['user']['geoip'])
+
+    def test_get_user_count(self):
+        self.assertEqual(0, models.Request.objects.get_user_count('name'))
+        self.create_request(url='https://host.net/',
+                            data=dict(user=dict(name='arnold')))
+        self.assertEqual(1, models.Request.objects.get_user_count('name'))
+        self.create_request(url='https://host.net/',
+                            data=dict(user=dict(name='mary')))
+        self.assertEqual(2, models.Request.objects.get_user_count('name'))
+        self.create_request(url='https://host1.net/')
+        self.assertEqual(2, models.Request.objects.get_user_count('name'))
+        self.create_request(url='https://host1.net/',
+                            data=dict(user=dict(name='arnold')))
+        self.assertEqual(2, models.Request.objects.get_user_count('name'))
+
+    def test_get_user_counts(self):
+        self.assertDictEqual(dict(),
+                             models.Request.objects.get_user_counts('name'))
+        self.create_request(url='https://host.net/',
+                            data=dict(user=dict(name='arnold')))
+        self.assertDictEqual(dict(arnold=1),
+                             models.Request.objects.get_user_counts('name'))
+        self.create_request(url='https://host.net/',
+                            data=dict(user=dict(name='mary')))
+        self.assertDictEqual(dict(arnold=1, mary=1),
+                             models.Request.objects.get_user_counts('name'))
+        self.create_request(url='https://host1.net/')
+        self.assertDictEqual(dict(arnold=1, mary=1),
+                             models.Request.objects.get_user_counts('name'))
+        self.create_request(url='https://host1.net/',
+                            data=dict(user=dict(name='arnold')))
+        self.assertDictEqual(dict(arnold=2, mary=1),
+                             models.Request.objects.get_user_counts('name'))
 
 
 class BaseAPITestCase(APITestCase):
@@ -193,9 +258,9 @@ class RequestQueryTestCase(BaseAPITestCase):
     )
 
     addresses = (
-        dict(ip_address='10.1.1.1', state='NC'),
-        dict(ip_address='10.1.1.2', state='NC'),
-        dict(ip_address='10.1.1.3', state='MA'),
+        dict(ip_address='10.1.1.1', geoip=dict(region='NC')),
+        dict(ip_address='10.1.1.2', geoip=dict(region='NC')),
+        dict(ip_address='10.1.1.3', geoip=dict(region='MA')),
     )
 
     users = (
@@ -336,13 +401,13 @@ class RequestQueryTestCase(BaseAPITestCase):
             self.assertEqual(result['user']['ip_address'], data['ip_address'])
 
     def test_filter_state(self):
-        data = dict(state=self.addresses[0]['state'])
+        data = dict(state=self.addresses[0]['geoip']['region'])
         response = self.client.get(self.path, data)
         self.assertEqual(status.HTTP_200_OK, response.status_code,
                          response.content)
         self.assertEqual(12, response.data['count'])
         for result in response.data['results']:
-            self.assertEqual(result['user']['state'], data['state'])
+            self.assertEqual(result['user']['geoip']['region'], data['state'])
 
     def test_filter_timestamp(self):
         precise = datetime.datetime(2000, 1, 1, 6, 15, tzinfo=UTC)
@@ -376,14 +441,16 @@ class RequestQueryTestCase(BaseAPITestCase):
         response = self.client.get(self.path, data)
         self.assertEqual(status.HTTP_200_OK, response.status_code,
                          response.content)
+        self.assertEqual(2, response.data['count'])
         no_z_data = response.data
         data['timestamp_0'] += 'Z'
         data['timestamp_1'] += 'Z'
         response = self.client.get(self.path, data)
         self.assertEqual(status.HTTP_200_OK, response.status_code,
                          response.content)
-        self.assertEqual(no_z_data, response.data)
-        self.assertEqual(2, response.data['count'])
+        # The "next" link is different.
+        no_z_data['next'] = response.data['next']
+        self.assertDictEqual(no_z_data, response.data)
         for result in response.data['results']:
             timestamp = self.assertTimestamp(result['timestamp'])
             self.assertGreaterEqual(timestamp, start)
