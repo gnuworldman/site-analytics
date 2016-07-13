@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>site_analytics.views &mdash; Site Analytics 0.1.0 documentation</title>
+    <title>site_analytics.views &mdash; Site Analytics 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="Site Analytics 0.1.0 documentation" href="../../index.html" />
+    <link rel="top" title="Site Analytics 0.2.0 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -49,7 +49,7 @@
   <h1>Source code for site_analytics.views</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Views for the site_analytics project.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">mixins</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">viewsets</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">mixins</span><span class="p">,</span> <span class="n">renderers</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">views</span><span class="p">,</span> <span class="n">viewsets</span>
 
 <span class="kn">from</span> <span class="nn">site_analytics._version</span> <span class="kn">import</span> <span class="n">__version__</span>
 <span class="kn">from</span> <span class="nn">site_analytics</span> <span class="kn">import</span> <span class="n">filters</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">serializers</span>
@@ -95,6 +95,43 @@
 <span class="c1">#         if not user.is_staff:</span>
 <span class="c1">#             result = result.filter(data__user__name=user.username)</span>
 <span class="c1">#         return result</span>
+
+
+<div class="viewcode-block" id="SummaryView"><a class="viewcode-back" href="../../site_analytics.views.html#site_analytics.views.SummaryView">[docs]</a><span class="k">class</span> <span class="nc">SummaryView</span><span class="p">(</span><span class="n">views</span><span class="o">.</span><span class="n">APIView</span><span class="p">):</span>
+
+    <span class="n">renderer_classes</span> <span class="o">=</span> <span class="n">renderers</span><span class="o">.</span><span class="n">TemplateHTMLRenderer</span><span class="p">,</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s1">&#39;site_analytics/summary.html&#39;</span>
+
+<div class="viewcode-block" id="SummaryView.get"><a class="viewcode-back" href="../../site_analytics.views.html#site_analytics.views.SummaryView.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="n">manager</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Request</span><span class="o">.</span><span class="n">objects</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">totals</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">requests</span><span class="o">=</span><span class="n">manager</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+                <span class="n">auth_users</span><span class="o">=</span><span class="n">manager</span><span class="o">.</span><span class="n">get_user_count</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">),</span>
+                <span class="n">states</span><span class="o">=</span><span class="n">manager</span><span class="o">.</span><span class="n">get_user_count</span><span class="p">(</span><span class="s1">&#39;geoip__region&#39;</span><span class="p">),</span>
+                <span class="n">ip_addresses</span><span class="o">=</span><span class="n">manager</span><span class="o">.</span><span class="n">get_user_count</span><span class="p">(</span><span class="s1">&#39;ip_address&#39;</span><span class="p">),</span>
+            <span class="p">),</span>
+            <span class="n">tops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">auth_users</span><span class="o">=</span><span class="n">manager</span><span class="o">.</span><span class="n">get_user_counts</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">),</span>
+                <span class="n">states</span><span class="o">=</span><span class="n">manager</span><span class="o">.</span><span class="n">get_user_counts</span><span class="p">(</span><span class="s1">&#39;geoip__region&#39;</span><span class="p">),</span>
+                <span class="n">ip_addresses</span><span class="o">=</span><span class="n">manager</span><span class="o">.</span><span class="n">get_user_counts</span><span class="p">(</span><span class="s1">&#39;ip_address&#39;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="FilterView"><a class="viewcode-back" href="../../site_analytics.views.html#site_analytics.views.FilterView">[docs]</a><span class="k">class</span> <span class="nc">FilterView</span><span class="p">(</span><span class="n">views</span><span class="o">.</span><span class="n">APIView</span><span class="p">):</span>
+
+    <span class="n">renderer_classes</span> <span class="o">=</span> <span class="n">renderers</span><span class="o">.</span><span class="n">TemplateHTMLRenderer</span><span class="p">,</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s1">&#39;site_analytics/filter.html&#39;</span>
+
+<div class="viewcode-block" id="FilterView.get"><a class="viewcode-back" href="../../site_analytics.views.html#site_analytics.views.FilterView.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">query_params</span>
+        <span class="n">qs</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">params</span><span class="p">:</span>
+            <span class="n">qs</span> <span class="o">=</span> <span class="n">qs</span><span class="o">.</span><span class="n">none</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="n">filters</span><span class="o">.</span><span class="n">RequestFilter</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">qs</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>
@@ -125,7 +162,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>

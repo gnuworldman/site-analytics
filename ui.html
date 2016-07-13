@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>User Interface &mdash; Site Analytics 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Site Analytics 0.2.0 documentation" href="index.html" />
+    <link rel="next" title="Release Notes" href="notes.html" />
+    <link rel="prev" title="Request information" href="api.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="notes.html" title="Release Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="Request information"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="user-interface">
+<h1>User Interface<a class="headerlink" href="#user-interface" title="Permalink to this headline">¶</a></h1>
+<p>In addition to the API, there are also some user interfaces provided to
+interact with the system at the same scheme/host/port as the API.</p>
+<div class="section" id="summary-page">
+<h2>Summary page<a class="headerlink" href="#summary-page" title="Permalink to this headline">¶</a></h2>
+<p>The summary page contains totals and counts of the top values of certain
+categories of data.  View the page by browsing to the <code class="docutils literal"><span class="pre">/summary.html</span></code> path.</p>
+</div>
+<div class="section" id="filter-page">
+<h2>Filter page<a class="headerlink" href="#filter-page" title="Permalink to this headline">¶</a></h2>
+<p>The filter page contains a form to enter the same query data as is accepted by
+the <code class="docutils literal"><span class="pre">/requests</span></code> collection.  View the page by browsing to the
+<code class="docutils literal"><span class="pre">/filter.html</span></code> path.  Enter complete values in one or more fields and click
+the <code class="docutils literal"><span class="pre">Submit</span> <span class="pre">Query</span></code> button to see a list of requests that match the criteria.</p>
+<p>The &#8220;Timestamp&#8221; input fields are <code class="docutils literal"><span class="pre">from</span></code> and <code class="docutils literal"><span class="pre">to</span></code>; they are inclusive, and
+any number of the two fields may be entered, but if one has a value, then it
+must be a complete date and time in ISO-8601 format.</p>
+</div>
+<div class="section" id="create-a-user">
+<h2>Create a user<a class="headerlink" href="#create-a-user" title="Permalink to this headline">¶</a></h2>
+<p>A superuser (and optionally any further desired users) is required to access
+the Admin or Browsable-API interfaces.  To create a superuser:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">{{</span> <span class="n">project_root</span> <span class="p">}}</span><span class="o">/</span><span class="n">src</span>
+<span class="o">./</span><span class="n">site_analytics</span><span class="o">/</span><span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">createsuperuser</span>
+</pre></div>
+</div>
+<p>Then, one can login to the Admin with the superuser to create any additional
+users.</p>
+</div>
+<div class="section" id="admin">
+<h2>Admin<a class="headerlink" href="#admin" title="Permalink to this headline">¶</a></h2>
+<p>The Django &#8220;Admin&#8221; interface provides direct access to persisted objects.  Use
+the path <code class="docutils literal"><span class="pre">/admin</span></code> to access this interface.</p>
+</div>
+<div class="section" id="browsable-api">
+<h2>Browsable API<a class="headerlink" href="#browsable-api" title="Permalink to this headline">¶</a></h2>
+<p>The REST Framework&#8217;s &#8220;Browsable API&#8221; is disabled by default but can be enabled
+by putting into settings_local.py the code from the comment under
+<code class="docutils literal"><span class="pre">REST_FRAMEWORK</span></code> in settings.py.  This is like the &#8220;Admin&#8221; except that it is
+for views (at the API endpoints) rather than for models.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">User Interface</a><ul>
+<li><a class="reference internal" href="#summary-page">Summary page</a></li>
+<li><a class="reference internal" href="#filter-page">Filter page</a></li>
+<li><a class="reference internal" href="#create-a-user">Create a user</a></li>
+<li><a class="reference internal" href="#admin">Admin</a></li>
+<li><a class="reference internal" href="#browsable-api">Browsable API</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api.html"
+                        title="previous chapter">Request information</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="notes.html"
+                        title="next chapter">Release Notes</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ui.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="notes.html" title="Release Notes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="Request information"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Craig Hurd-Rindy.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+    </div>
+  </body>
+</html>

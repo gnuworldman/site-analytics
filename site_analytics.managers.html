@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>site_analytics.managers module &mdash; Site Analytics 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Site Analytics 0.2.0 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-site_analytics.managers">
+<span id="site-analytics-managers-module"></span><h1>site_analytics.managers module<a class="headerlink" href="#module-site_analytics.managers" title="Permalink to this headline">¶</a></h1>
+<p>Managers for the site_analytics project.</p>
+<dl class="function">
+<dt id="site_analytics.managers.quote_ident">
+<code class="descclassname">site_analytics.managers.</code><code class="descname">quote_ident</code><span class="sig-paren">(</span><em>identifier</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/managers.html#quote_ident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.managers.quote_ident" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quote an SQL identifier.</p>
+<p>Replace this with psycopg2.extensions.quote_ident
+(<a class="reference external" href="https://github.com/psycopg/psycopg2/pull/359">pull request</a>)
+when it gets into a stable release.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="site_analytics.managers.RequestManager">
+<em class="property">class </em><code class="descclassname">site_analytics.managers.</code><code class="descname">RequestManager</code><a class="reference internal" href="_modules/site_analytics/managers.html#RequestManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.managers.RequestManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
+<dl class="attribute">
+<dt id="site_analytics.managers.RequestManager.data_column">
+<code class="descname">data_column</code><a class="headerlink" href="#site_analytics.managers.RequestManager.data_column" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="site_analytics.managers.RequestManager.get_user_field_expr">
+<code class="descname">get_user_field_expr</code><span class="sig-paren">(</span><em>user_field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/managers.html#RequestManager.get_user_field_expr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.managers.RequestManager.get_user_field_expr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="site_analytics.managers.RequestManager.get_user_count">
+<code class="descname">get_user_count</code><span class="sig-paren">(</span><em>user_field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/managers.html#RequestManager.get_user_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.managers.RequestManager.get_user_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="site_analytics.managers.RequestManager.get_user_counts">
+<code class="descname">get_user_counts</code><span class="sig-paren">(</span><em>user_field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/managers.html#RequestManager.get_user_counts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.managers.RequestManager.get_user_counts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/site_analytics.managers.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Craig Hurd-Rindy.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+    </div>
+  </body>
+</html>

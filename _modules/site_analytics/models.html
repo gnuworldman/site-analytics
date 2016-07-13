@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>site_analytics.models &mdash; Site Analytics 0.1.0 documentation</title>
+    <title>site_analytics.models &mdash; Site Analytics 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="Site Analytics 0.1.0 documentation" href="../../index.html" />
+    <link rel="top" title="Site Analytics 0.2.0 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -49,12 +49,18 @@
   <h1>Source code for site_analytics.models</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Models for the site_analytics project.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.contrib.gis.geoip2</span> <span class="kn">import</span> <span class="n">GeoIP2</span>
 <span class="kn">from</span> <span class="nn">django.contrib.postgres.fields</span> <span class="kn">import</span> <span class="n">jsonb</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
 <span class="kn">from</span> <span class="nn">django.utils.timezone</span> <span class="kn">import</span> <span class="n">now</span>
+<span class="kn">from</span> <span class="nn">geoip2.errors</span> <span class="kn">import</span> <span class="n">AddressNotFoundError</span>
 
+<span class="kn">from</span> <span class="nn">site_analytics</span> <span class="kn">import</span> <span class="n">managers</span>
 <span class="c1"># Load and register Transform classes.</span>
 <span class="kn">from</span> <span class="nn">site_analytics</span> <span class="kn">import</span> <span class="n">transforms</span>  <span class="c1"># noqa</span>
+
+
+<span class="n">USER_GEOIP_KEY</span> <span class="o">=</span> <span class="s1">&#39;geoip&#39;</span>
 
 
 <div class="viewcode-block" id="Request"><a class="viewcode-back" href="../../site_analytics.models.html#site_analytics.admin.Request">[docs]</a><span class="k">class</span> <span class="nc">Request</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
@@ -68,17 +74,25 @@
 <span class="sd">    timestamp field may be specified and defaults to the current time.</span>
 <span class="sd">    The remainder of posted data goes into the :attr:`data` field.  If</span>
 <span class="sd">    the user is identified in any way by the processing service, then</span>
-<span class="sd">    that data should be specified as an object in the `user` field.  If</span>
-<span class="sd">    the client IP address is known and should be saved, then it should</span>
-<span class="sd">    be specified in the `ip_address` field of the user object.  If the</span>
-<span class="sd">    U.S. state of the origin of the request is known and should be</span>
-<span class="sd">    saved, then it should be specified in the `state` field of the user</span>
-<span class="sd">    object.  If the request was made by a particular user and should be</span>
-<span class="sd">    saved, then the username should be specified in the `name` field of</span>
-<span class="sd">    the user object.  These three special fields of the user object can</span>
-<span class="sd">    be used to filter requests with query parameters to a GET on the</span>
-<span class="sd">    requests collection; see `~site_analytics.filters.RequestFilter`</span>
-<span class="sd">    for details.</span>
+<span class="sd">    that data should be specified as an object in the ``user`` field.</span>
+<span class="sd">    If the client IP address is known and should be saved, then it</span>
+<span class="sd">    should be specified in the `ip_address` field of the user object.</span>
+<span class="sd">    If the U.S. state of the origin of the request is known and should</span>
+<span class="sd">    be saved, then it should be specified in the ``region`` field of</span>
+<span class="sd">    the object in the ``geoip`` field in the user object, but it is</span>
+<span class="sd">    easier for the client to specify the IP address and let the system</span>
+<span class="sd">    fill in the ``geoip`` field of the user object based on that.  If</span>
+<span class="sd">    the request was made by a particular user and should be saved, then</span>
+<span class="sd">    the username should be specified in the ``name`` field of the user</span>
+<span class="sd">    object.  These three special fields of the user object can be used</span>
+<span class="sd">    to filter requests with query parameters to a GET on the requests</span>
+<span class="sd">    collection; see `~site_analytics.filters.RequestFilter` for</span>
+<span class="sd">    details.</span>
+
+<span class="sd">    If ``ip_address`` is provided in the user object and ``geoip`` is</span>
+<span class="sd">    not, then the ``geoip`` field in the user object is populated with</span>
+<span class="sd">    GeoIP data based on the given IP address if its location can be</span>
+<span class="sd">    determined.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -95,17 +109,41 @@
     <span class="n">data</span> <span class="o">=</span> <span class="n">jsonb</span><span class="o">.</span><span class="n">JSONField</span><span class="p">(</span>
         <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
-        <span class="n">db_index</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
         <span class="n">help_text</span><span class="o">=</span><span class="s2">&quot;Additional data related to the request&quot;</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
 
         <span class="n">db_table</span> <span class="o">=</span> <span class="s1">&#39;request&#39;</span>
 
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">managers</span><span class="o">.</span><span class="n">RequestManager</span><span class="p">()</span>
+
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;Request {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__str__</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__str__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Request.clean"><a class="viewcode-back" href="../../site_analytics.models.html#site_analytics.admin.Request.clean">[docs]</a>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_geoip_data</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Request.set_geoip_data"><a class="viewcode-back" href="../../site_analytics.models.html#site_analytics.admin.Request.set_geoip_data">[docs]</a>    <span class="k">def</span> <span class="nf">set_geoip_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">USER_GEOIP_KEY</span> <span class="ow">in</span> <span class="n">user</span><span class="p">:</span>
+            <span class="c1"># Do not overwrite explicitly-set data.</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ip_address</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s1">&#39;ip_address&#39;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">user</span><span class="p">[</span><span class="n">USER_GEOIP_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="n">GeoIP2</span><span class="p">()</span><span class="o">.</span><span class="n">city</span><span class="p">(</span><span class="n">ip_address</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">AddressNotFoundError</span><span class="p">:</span>
+            <span class="k">pass</span></div></div>
 </pre></div>
 
           </div>
@@ -136,7 +174,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>

@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>site_analytics.managers &mdash; Site Analytics 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Site Analytics 0.2.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for site_analytics.managers</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Managers for the site_analytics project.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">connection</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Manager</span>
+
+
+<div class="viewcode-block" id="quote_ident"><a class="viewcode-back" href="../../site_analytics.managers.html#site_analytics.managers.quote_ident">[docs]</a><span class="k">def</span> <span class="nf">quote_ident</span><span class="p">(</span><span class="n">identifier</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Quote an SQL identifier.</span>
+
+<span class="sd">    Replace this with psycopg2.extensions.quote_ident</span>
+<span class="sd">    (`pull request &lt;https://github.com/psycopg/psycopg2/pull/359&gt;`_)</span>
+<span class="sd">    when it gets into a stable release.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s1">&#39;&quot;{}&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">identifier</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&quot;&#39;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="RequestManager"><a class="viewcode-back" href="../../site_analytics.managers.html#site_analytics.managers.RequestManager">[docs]</a><span class="k">class</span> <span class="nc">RequestManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data_column</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">field</span><span class="o">.</span><span class="n">db_column</span> <span class="ow">or</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span>
+
+<div class="viewcode-block" id="RequestManager.get_user_field_expr"><a class="viewcode-back" href="../../site_analytics.managers.html#site_analytics.managers.RequestManager.get_user_field_expr">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_field_expr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_field</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;{}#&gt;&#39;{{user,{}}}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">quote_ident</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_column</span><span class="p">),</span>
+                                          <span class="n">user_field</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="RequestManager.get_user_count"><a class="viewcode-back" href="../../site_analytics.managers.html#site_analytics.managers.RequestManager.get_user_count">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_field</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT COUNT(DISTINCT({})) FROM {}&quot;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_user_field_expr</span><span class="p">(</span><span class="n">user_field</span><span class="p">),</span>
+                        <span class="n">quote_ident</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">db_table</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="RequestManager.get_user_counts"><a class="viewcode-back" href="../../site_analytics.managers.html#site_analytics.managers.RequestManager.get_user_counts">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_counts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_field</span><span class="p">):</span>
+        <span class="n">field_expr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user_field_expr</span><span class="p">(</span><span class="n">user_field</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span> <span class="k">as</span> <span class="n">cursor</span><span class="p">:</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT DISTINCT({0}), COUNT(1) AS c FROM {1}&quot;</span>
+                <span class="s2">&quot; WHERE {0} IS NOT NULL GROUP BY {0}&quot;</span>
+                <span class="s2">&quot; ORDER BY c DESC LIMIT </span><span class="si">%s</span><span class="s2">&quot;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field_expr</span><span class="p">,</span> <span class="n">quote_ident</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">db_table</span><span class="p">)),</span>
+                <span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">SITEANALYTICS_DASHBOARD_TOP_N</span><span class="p">,))</span>
+            <span class="k">return</span> <span class="n">OrderedDict</span><span class="p">(</span><span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">())</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Craig Hurd-Rindy.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+    </div>
+  </body>
+</html>

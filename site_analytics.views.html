@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>site_analytics.views module &mdash; Site Analytics 0.1.0 documentation</title>
+    <title>site_analytics.views module &mdash; Site Analytics 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.0',
+        VERSION:     '0.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Site Analytics 0.1.0 documentation" href="index.html" /> 
+    <link rel="top" title="Site Analytics 0.2.0 documentation" href="index.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -75,7 +75,7 @@ that is not a collection, for which <code class="xref py py-obj docutils literal
 <p>The view set used for the /requests collection.</p>
 <dl class="attribute">
 <dt id="site_analytics.views.RequestViewSet.queryset">
-<code class="descname">queryset</code><em class="property"> = [&lt;Request: Request 2&gt;, &lt;Request: Request 1&gt;]</em><a class="headerlink" href="#site_analytics.views.RequestViewSet.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = [&lt;Request: Request 5&gt;, &lt;Request: Request 4&gt;, &lt;Request: Request 3&gt;, &lt;Request: Request 2&gt;, &lt;Request: Request 1&gt;]</em><a class="headerlink" href="#site_analytics.views.RequestViewSet.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -93,6 +93,48 @@ that is not a collection, for which <code class="xref py py-obj docutils literal
 <dl class="attribute">
 <dt id="site_analytics.views.RequestViewSet.suffix">
 <code class="descname">suffix</code><em class="property"> = None</em><a class="headerlink" href="#site_analytics.views.RequestViewSet.suffix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="site_analytics.views.SummaryView">
+<em class="property">class </em><code class="descclassname">site_analytics.views.</code><code class="descname">SummaryView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/views.html#SummaryView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.views.SummaryView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></code></p>
+<dl class="attribute">
+<dt id="site_analytics.views.SummaryView.renderer_classes">
+<code class="descname">renderer_classes</code><em class="property"> = (&lt;class 'rest_framework.renderers.TemplateHTMLRenderer'&gt;,)</em><a class="headerlink" href="#site_analytics.views.SummaryView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="site_analytics.views.SummaryView.template_name">
+<code class="descname">template_name</code><em class="property"> = 'site_analytics/summary.html'</em><a class="headerlink" href="#site_analytics.views.SummaryView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="site_analytics.views.SummaryView.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/views.html#SummaryView.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.views.SummaryView.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="site_analytics.views.FilterView">
+<em class="property">class </em><code class="descclassname">site_analytics.views.</code><code class="descname">FilterView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/views.html#FilterView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.views.FilterView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></code></p>
+<dl class="attribute">
+<dt id="site_analytics.views.FilterView.renderer_classes">
+<code class="descname">renderer_classes</code><em class="property"> = (&lt;class 'rest_framework.renderers.TemplateHTMLRenderer'&gt;,)</em><a class="headerlink" href="#site_analytics.views.FilterView.renderer_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="site_analytics.views.FilterView.template_name">
+<code class="descname">template_name</code><em class="property"> = 'site_analytics/filter.html'</em><a class="headerlink" href="#site_analytics.views.FilterView.template_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="site_analytics.views.FilterView.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/views.html#FilterView.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.views.FilterView.get" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -135,7 +177,7 @@ that is not a collection, for which <code class="xref py py-obj docutils literal
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

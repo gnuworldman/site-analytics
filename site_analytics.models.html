@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>site_analytics.models module &mdash; Site Analytics 0.1.0 documentation</title>
+    <title>site_analytics.models module &mdash; Site Analytics 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.0',
+        VERSION:     '0.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Site Analytics 0.1.0 documentation" href="index.html" /> 
+    <link rel="top" title="Site Analytics 0.2.0 documentation" href="index.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -58,17 +58,39 @@ which persists the posted data via this model.</p>
 timestamp field may be specified and defaults to the current time.
 The remainder of posted data goes into the <code class="xref py py-attr docutils literal"><span class="pre">data</span></code> field.  If
 the user is identified in any way by the processing service, then
-that data should be specified as an object in the <code class="xref py py-obj docutils literal"><span class="pre">user</span></code> field.  If
-the client IP address is known and should be saved, then it should
-be specified in the <code class="xref py py-obj docutils literal"><span class="pre">ip_address</span></code> field of the user object.  If the
-U.S. state of the origin of the request is known and should be
-saved, then it should be specified in the <code class="xref py py-obj docutils literal"><span class="pre">state</span></code> field of the user
-object.  If the request was made by a particular user and should be
-saved, then the username should be specified in the <code class="xref py py-obj docutils literal"><span class="pre">name</span></code> field of
-the user object.  These three special fields of the user object can
-be used to filter requests with query parameters to a GET on the
-requests collection; see <a class="reference internal" href="site_analytics.filters.html#site_analytics.filters.RequestFilter" title="site_analytics.filters.RequestFilter"><code class="xref py py-obj docutils literal"><span class="pre">RequestFilter</span></code></a>
-for details.</p>
+that data should be specified as an object in the <code class="docutils literal"><span class="pre">user</span></code> field.
+If the client IP address is known and should be saved, then it
+should be specified in the <code class="xref py py-obj docutils literal"><span class="pre">ip_address</span></code> field of the user object.
+If the U.S. state of the origin of the request is known and should
+be saved, then it should be specified in the <code class="docutils literal"><span class="pre">region</span></code> field of
+the object in the <code class="docutils literal"><span class="pre">geoip</span></code> field in the user object, but it is
+easier for the client to specify the IP address and let the system
+fill in the <code class="docutils literal"><span class="pre">geoip</span></code> field of the user object based on that.  If
+the request was made by a particular user and should be saved, then
+the username should be specified in the <code class="docutils literal"><span class="pre">name</span></code> field of the user
+object.  These three special fields of the user object can be used
+to filter requests with query parameters to a GET on the requests
+collection; see <a class="reference internal" href="site_analytics.filters.html#site_analytics.filters.RequestFilter" title="site_analytics.filters.RequestFilter"><code class="xref py py-obj docutils literal"><span class="pre">RequestFilter</span></code></a> for
+details.</p>
+<p>If <code class="docutils literal"><span class="pre">ip_address</span></code> is provided in the user object and <code class="docutils literal"><span class="pre">geoip</span></code> is
+not, then the <code class="docutils literal"><span class="pre">geoip</span></code> field in the user object is populated with
+GeoIP data based on the given IP address if its location can be
+determined.</p>
+<dl class="attribute">
+<dt id="site_analytics.models.Request.objects">
+<code class="descname">objects</code><em class="property"> = &lt;site_analytics.managers.RequestManager object&gt;</em><a class="headerlink" href="#site_analytics.models.Request.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="site_analytics.models.Request.clean">
+<code class="descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/models.html#Request.clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.models.Request.clean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="site_analytics.models.Request.set_geoip_data">
+<code class="descname">set_geoip_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/models.html#Request.set_geoip_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.models.Request.set_geoip_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="exception">
 <dt id="site_analytics.models.Request.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#site_analytics.models.Request.DoesNotExist" title="Permalink to this definition">¶</a></dt>
@@ -89,11 +111,6 @@ for details.</p>
 <dl class="method">
 <dt id="site_analytics.models.Request.get_previous_by_timestamp">
 <code class="descclassname">Request.</code><code class="descname">get_previous_by_timestamp</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#site_analytics.models.Request.get_previous_by_timestamp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="site_analytics.models.Request.objects">
-<code class="descclassname">Request.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#site_analytics.models.Request.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -136,7 +153,7 @@ for details.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

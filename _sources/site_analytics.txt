@@ -22,6 +22,7 @@ Submodules
    site_analytics.apps
    site_analytics.filters
    site_analytics.manage
+   site_analytics.managers
    site_analytics.models
    site_analytics.serializers
    site_analytics.settings

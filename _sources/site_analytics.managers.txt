@@ -1,0 +1,7 @@
+site_analytics.managers module
+==============================
+
+.. automodule:: site_analytics.managers
+    :members:
+    :undoc-members:
+    :show-inheritance:

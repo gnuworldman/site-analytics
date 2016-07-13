@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; Site Analytics 0.1.0 documentation</title>
+    <title>Index &mdash; Site Analytics 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.0',
+        VERSION:     '0.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Site Analytics 0.1.0 documentation" href="index.html" /> 
+    <link rel="top" title="Site Analytics 0.2.0 documentation" href="index.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -51,6 +51,7 @@
 <div class="genindex-jumpbox">
  <a href="#A"><strong>A</strong></a>
  | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
@@ -104,9 +105,29 @@
   </dl></td>
 </tr></table>
 
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="site_analytics.models.html#site_analytics.models.Request.clean">clean() (site_analytics.models.Request method)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestModelTestCase.create_request">create_request() (site_analytics.tests.RequestModelTestCase method)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="site_analytics.managers.html#site_analytics.managers.RequestManager.data_column">data_column (site_analytics.managers.RequestManager attribute)</a>
+  </dt>
+
       
   <dt><a href="site_analytics.filters.html#site_analytics.filters.RequestFilter.declared_filters">declared_filters (site_analytics.filters.RequestFilter attribute)</a>
   </dt>
@@ -131,10 +152,14 @@
   <dt><a href="site_analytics.filters.html#site_analytics.filters.RequestFilter.Meta.fields">fields (site_analytics.filters.RequestFilter.Meta attribute)</a>
   </dt>
 
+      
+  <dt><a href="site_analytics.views.html#site_analytics.views.RequestViewSet.filter_class">filter_class (site_analytics.views.RequestViewSet attribute)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="site_analytics.views.html#site_analytics.views.RequestViewSet.filter_class">filter_class (site_analytics.views.RequestViewSet attribute)</a>
+  <dt><a href="site_analytics.views.html#site_analytics.views.FilterView">FilterView (class in site_analytics.views)</a>
   </dt>
 
       
@@ -148,6 +173,16 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="site_analytics.views.html#site_analytics.views.FilterView.get">get() (site_analytics.views.FilterView method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="site_analytics.views.html#site_analytics.views.SummaryView.get">(site_analytics.views.SummaryView method)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="site_analytics.models.html#site_analytics.models.Request.get_next_by_timestamp">get_next_by_timestamp() (site_analytics.models.Request method)</a>
   </dt>
 
@@ -155,10 +190,22 @@
   <dt><a href="site_analytics.models.html#site_analytics.models.Request.get_previous_by_timestamp">get_previous_by_timestamp() (site_analytics.models.Request method)</a>
   </dt>
 
+      
+  <dt><a href="site_analytics.tests.html#site_analytics.tests.BaseAPITestCase.get_url_base">get_url_base() (site_analytics.tests.BaseAPITestCase static method)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="site_analytics.tests.html#site_analytics.tests.BaseAPITestCase.get_url_base">get_url_base() (site_analytics.tests.BaseAPITestCase static method)</a>
+  <dt><a href="site_analytics.managers.html#site_analytics.managers.RequestManager.get_user_count">get_user_count() (site_analytics.managers.RequestManager method)</a>
+  </dt>
+
+      
+  <dt><a href="site_analytics.managers.html#site_analytics.managers.RequestManager.get_user_counts">get_user_counts() (site_analytics.managers.RequestManager method)</a>
+  </dt>
+
+      
+  <dt><a href="site_analytics.managers.html#site_analytics.managers.RequestManager.get_user_field_expr">get_user_field_expr() (site_analytics.managers.RequestManager method)</a>
   </dt>
 
   </dl></td>
@@ -277,10 +324,14 @@
   <dt><a href="site_analytics.filters.html#site_analytics.filters.RequestFilter.qs">qs (site_analytics.filters.RequestFilter attribute)</a>
   </dt>
 
+      
+  <dt><a href="site_analytics.views.html#site_analytics.views.RequestViewSet.queryset">queryset (site_analytics.views.RequestViewSet attribute)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="site_analytics.views.html#site_analytics.views.RequestViewSet.queryset">queryset (site_analytics.views.RequestViewSet attribute)</a>
+  <dt><a href="site_analytics.managers.html#site_analytics.managers.quote_ident">quote_ident() (in module site_analytics.managers)</a>
   </dt>
 
   </dl></td>
@@ -289,6 +340,16 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="site_analytics.views.html#site_analytics.views.FilterView.renderer_classes">renderer_classes (site_analytics.views.FilterView attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="site_analytics.views.html#site_analytics.views.SummaryView.renderer_classes">(site_analytics.views.SummaryView attribute)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="site_analytics.models.html#site_analytics.models.Request">Request (class in site_analytics.models)</a>
   </dt>
@@ -328,6 +389,10 @@
   </dt>
 
       
+  <dt><a href="site_analytics.managers.html#site_analytics.managers.RequestManager">RequestManager (class in site_analytics.managers)</a>
+  </dt>
+
+      
   <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestModelTestCase">RequestModelTestCase (class in site_analytics.tests)</a>
   </dt>
 
@@ -358,6 +423,10 @@
   </dt>
 
       
+  <dt><a href="site_analytics.models.html#site_analytics.models.Request.set_geoip_data">set_geoip_data() (site_analytics.models.Request method)</a>
+  </dt>
+
+      
   <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.setUpTestData">setUpTestData() (site_analytics.tests.RequestQueryTestCase class method)</a>
   </dt>
 
@@ -382,6 +451,10 @@
   </dt>
 
       
+  <dt><a href="site_analytics.managers.html#module-site_analytics.managers">site_analytics.managers (module)</a>
+  </dt>
+
+      
   <dt><a href="site_analytics.migrations.html#module-site_analytics.migrations">site_analytics.migrations (module)</a>
   </dt>
 
@@ -397,12 +470,12 @@
   <dt><a href="site_analytics.serializers.html#module-site_analytics.serializers">site_analytics.serializers (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="site_analytics.settings.html#module-site_analytics.settings">site_analytics.settings (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="site_analytics.settings_local.html#module-site_analytics.settings_local">site_analytics.settings_local (module)</a>
   </dt>
@@ -453,12 +526,26 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="site_analytics.views.html#site_analytics.views.SummaryView">SummaryView (class in site_analytics.views)</a>
+  </dt>
+
   </dl></td>
 </tr></table>
 
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="site_analytics.views.html#site_analytics.views.FilterView.template_name">template_name (site_analytics.views.FilterView attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="site_analytics.views.html#site_analytics.views.SummaryView.template_name">(site_analytics.views.SummaryView attribute)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_ip_address">test_filter_ip_address() (site_analytics.tests.RequestQueryTestCase method)</a>
   </dt>
@@ -499,8 +586,6 @@
   <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_username">test_filter_username() (site_analytics.tests.RequestQueryTestCase method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_filter_username_and_timestamp_not_after">test_filter_username_and_timestamp_not_after() (site_analytics.tests.RequestQueryTestCase method)</a>
   </dt>
@@ -515,6 +600,16 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestModelTestCase.test_get_user_count">test_get_user_count() (site_analytics.tests.RequestModelTestCase method)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestModelTestCase.test_get_user_counts">test_get_user_counts() (site_analytics.tests.RequestModelTestCase method)</a>
+  </dt>
+
       
   <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestQueryTestCase.test_pagination">test_pagination() (site_analytics.tests.RequestQueryTestCase method)</a>
   </dt>
@@ -533,6 +628,26 @@
 
       
   <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestAPITestCase.test_post_with_data">test_post_with_data() (site_analytics.tests.RequestAPITestCase method)</a>
+  </dt>
+
+      
+  <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestModelTestCase.test_set_geoip_data">test_set_geoip_data() (site_analytics.tests.RequestModelTestCase method)</a>
+  </dt>
+
+      
+  <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestModelTestCase.test_set_geoip_data_do_not_overwrite">test_set_geoip_data_do_not_overwrite() (site_analytics.tests.RequestModelTestCase method)</a>
+  </dt>
+
+      
+  <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestModelTestCase.test_set_geoip_data_no_ip_address">test_set_geoip_data_no_ip_address() (site_analytics.tests.RequestModelTestCase method)</a>
+  </dt>
+
+      
+  <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestModelTestCase.test_set_geoip_data_no_user">test_set_geoip_data_no_user() (site_analytics.tests.RequestModelTestCase method)</a>
+  </dt>
+
+      
+  <dt><a href="site_analytics.tests.html#site_analytics.tests.RequestModelTestCase.test_set_geoip_data_private_address">test_set_geoip_data_private_address() (site_analytics.tests.RequestModelTestCase method)</a>
   </dt>
 
       
@@ -619,7 +734,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.1.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Site Analytics 0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
