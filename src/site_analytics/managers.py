@@ -42,7 +42,7 @@ class RequestManager(Manager):
         with connection.cursor() as cursor:
             cursor.execute(
                 "SELECT DISTINCT({0}), COUNT(1) AS c FROM {1}"
-                " WHERE {0} IS NOT NULL GROUP BY {0}"
+                " WHERE ({0}) IS NOT NULL GROUP BY {0}"
                 " ORDER BY c DESC LIMIT %s"
                 .format(field_expr, quote_ident(self.model._meta.db_table)),
                 (settings.SITEANALYTICS_DASHBOARD_TOP_N,))
