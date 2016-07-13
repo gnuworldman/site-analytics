@@ -20,16 +20,26 @@ def quote_ident(identifier):
 
 class RequestManager(Manager):
 
-    @property
-    def data_column(self):
-        field = self.model._meta.get_field('data')
-        return field.db_column or field.name
+    """The manager for the :class:`~site_analytics.models.Request` model."""
 
     def get_user_field_expr(self, user_field):
-        return "{}#>'{{user,{}}}'".format(quote_ident(self.data_column),
-                                          user_field.replace('__', ','))
+        """Return the SQL expression for the given user field.
+
+        :param str user_field: Name of the focus field within the user object.
+        :rtype: str
+
+        """
+        return "{}#>'{{user,{}}}'".format(
+            quote_ident(self.model.get_data_column()),
+            user_field.replace('__', ','))
 
     def get_user_count(self, user_field):
+        """Return the number of unique values for the given user field.
+
+        :param str user_field: Name of the focus field within the user object.
+        :rtype: int
+
+        """
         with connection.cursor() as cursor:
             cursor.execute(
                 "SELECT COUNT(DISTINCT({})) FROM {}"
@@ -38,6 +48,13 @@ class RequestManager(Manager):
             return cursor.fetchone()[0]
 
     def get_user_counts(self, user_field):
+        """Return a mapping of unique value counts for the given user field.
+
+        :param str user_field: Name of the focus field within the user object.
+        :returns: Counts keyed by the number of unique (top 5) values
+        :rtype: OrderedDict
+
+        """
         field_expr = self.get_user_field_expr(user_field)
         with connection.cursor() as cursor:
             cursor.execute(

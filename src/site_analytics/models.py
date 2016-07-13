@@ -68,6 +68,12 @@ class Request(models.Model):
 
     objects = managers.RequestManager()
 
+    @classmethod
+    def get_data_column(cls):
+        """Return the database column name for the :attr:`data` field."""
+        field = cls._meta.get_field('data')
+        return field.db_column or field.name
+
     def __str__(self):
         if self.pk:
             return "Request {}".format(self.pk)
@@ -78,6 +84,11 @@ class Request(models.Model):
         return super().clean()
 
     def set_geoip_data(self):
+        """Use the IP address, if provided, to look up and store GeoIP data.
+
+        Respect any provided geoip value by not overwriting it.
+
+        """
         if not self.data:
             return
         try:
@@ -85,7 +96,7 @@ class Request(models.Model):
         except KeyError:
             return
         if USER_GEOIP_KEY in user:
-            # Do not overwrite explicitly-set data.
+            # Do not overwrite explicitly set data.
             return
         try:
             ip_address = user['ip_address']
