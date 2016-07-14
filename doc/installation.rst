@@ -1,21 +1,39 @@
 Installation
 ============
 
-Prerequisites
--------------
+Interpreter
+-----------
 
-Install the Python 3.5 and PostgreSQL 9.5 development libraries.  For example
-on Ubuntu::
+Install the Python 3 interpreter and development libraries.  For example on
+Ubuntu::
 
-  sudo apt-get install python3.5-dev python3.5-venv
+  sudo apt-get install python3-dev
+  sudo apt-get install python3.$(python3 -c 'import sys; print(sys.version_info[1])')-venv
+
+Database
+--------
+
+Install the PostgreSQL 9.5 DBMS and its server development library.  For
+example on Ubuntu::
+
+  wget -q -O- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/postgresql.list > /dev/null
+  sudo apt-get update
   sudo apt-get install postgresql-9.5 postgresql-server-dev-9.5
+
+A PostgreSQL role and database will need to be created for the project to use,
+for example on Ubuntu::
+
+  sudo su - postgres -c "createuser -d ${USER}"
+  sudo su - postgres -c "createdb -O ${USER} site_analytics"
+
 
 Virtual environment
 -------------------
 
 It is recommended to create and activate a virtual environment.  For example::
 
-  pyvenv-3.5 ~/.virtualenvs/site-analytics
+  python3 -m venv ~/.virtualenvs/site-analytics
   source ~/.virtualenvs/site-analytics/bin/activate
 
 
@@ -38,6 +56,7 @@ Via source
 
 Get the source::
 
+  sudo apt-get install git
   git clone https://github.com/gnuworldman/site-analytics.git
 
 Change to the resulting project directory::

@@ -67,8 +67,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'site_analytics',
-        'USERNAME': 'site_analytics',
-        'PASSWORD': 'yD8L1qS3',
     }
 }
 
