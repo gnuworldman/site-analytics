@@ -15,10 +15,12 @@ must be installed::
 Prepending "sudo " to that command might be necessary if not using a virtual
 environment.
 
-The static files for all of the apps in the project must be collected::
+The static files for all of the apps in the project must be collected, and the
+database must be initialized/migrated::
 
   export PYTHONPATH="{{ project_root }}/src"
   "$PYTHONPATH/src/site_analytics/manage.py" collectstatic --noinput
+  "$PYTHONPATH/src/site_analytics/manage.py" migrate
 
 Start the service
 -----------------
