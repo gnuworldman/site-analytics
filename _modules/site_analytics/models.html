@@ -117,6 +117,12 @@
 
     <span class="n">objects</span> <span class="o">=</span> <span class="n">managers</span><span class="o">.</span><span class="n">RequestManager</span><span class="p">()</span>
 
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Request.get_data_column"><a class="viewcode-back" href="../../site_analytics.models.html#site_analytics.admin.Request.get_data_column">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_column</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the database column name for the :attr:`data` field.&quot;&quot;&quot;</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">field</span><span class="o">.</span><span class="n">db_column</span> <span class="ow">or</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span></div>
+
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;Request {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
@@ -127,6 +133,11 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Request.set_geoip_data"><a class="viewcode-back" href="../../site_analytics.models.html#site_analytics.admin.Request.set_geoip_data">[docs]</a>    <span class="k">def</span> <span class="nf">set_geoip_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Use the IP address, if provided, to look up and store GeoIP data.</span>
+
+<span class="sd">        Respect any provided geoip value by not overwriting it.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">try</span><span class="p">:</span>
@@ -134,7 +145,7 @@
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="n">USER_GEOIP_KEY</span> <span class="ow">in</span> <span class="n">user</span><span class="p">:</span>
-            <span class="c1"># Do not overwrite explicitly-set data.</span>
+            <span class="c1"># Do not overwrite explicitly set data.</span>
             <span class="k">return</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">ip_address</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s1">&#39;ip_address&#39;</span><span class="p">]</span>

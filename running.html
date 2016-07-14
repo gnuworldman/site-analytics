@@ -60,22 +60,22 @@
 prompt begins with <code class="docutils literal"><span class="pre">(site-analytics)</span></code>).</p>
 <p>If you want to run the service without installing it, then the dependencies
 must be installed:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">Ur</span> <span class="p">{{</span> <span class="n">project_root</span> <span class="p">}}</span><span class="o">/</span><span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">Ur</span> <span class="s2">&quot;{{ project_root }}/requirements.txt&quot;</span>
 </pre></div>
 </div>
 <p>Prepending &#8220;sudo &#8221; to that command might be necessary if not using a virtual
 environment.</p>
 <p>The static files for all of the apps in the project must be collected:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">{{</span> <span class="n">project_root</span> <span class="p">}}</span><span class="o">/</span><span class="n">src</span>
-<span class="o">./</span><span class="n">site_analytics</span><span class="o">/</span><span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">collectstatic</span> <span class="o">--</span><span class="n">noinput</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;{{ project_root }}/src&quot;</span>
+<span class="s2">&quot;$PYTHONPATH/src/site_analytics/manage.py&quot;</span> <span class="n">collectstatic</span> <span class="o">--</span><span class="n">noinput</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="start-the-service">
 <h2>Start the service<a class="headerlink" href="#start-the-service" title="Permalink to this headline">¶</a></h2>
-<p>Change to the src subdirectory and execute:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">{{</span> <span class="n">project_root</span> <span class="p">}}</span><span class="o">/</span><span class="n">src</span>
-<span class="o">./</span><span class="n">site_analytics</span><span class="o">/</span><span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">runserver</span>
+<p>Add the project to the Python path and execute:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;{{ project_root }}/src&quot;</span>
+<span class="s2">&quot;$PYTHONPATH/site_analytics/manage.py&quot;</span> <span class="n">runserver</span>
 </pre></div>
 </div>
 <p>See the help for the <code class="docutils literal"><span class="pre">runserver</span></code> command to control the service port, etc.</p>

@@ -81,6 +81,12 @@ determined.</p>
 <code class="descname">objects</code><em class="property"> = &lt;site_analytics.managers.RequestManager object&gt;</em><a class="headerlink" href="#site_analytics.models.Request.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="classmethod">
+<dt id="site_analytics.models.Request.get_data_column">
+<em class="property">classmethod </em><code class="descname">get_data_column</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/models.html#Request.get_data_column"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.models.Request.get_data_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the database column name for the <code class="xref py py-attr docutils literal"><span class="pre">data</span></code> field.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="site_analytics.models.Request.clean">
 <code class="descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/models.html#Request.clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.models.Request.clean" title="Permalink to this definition">¶</a></dt>
@@ -89,7 +95,9 @@ determined.</p>
 <dl class="method">
 <dt id="site_analytics.models.Request.set_geoip_data">
 <code class="descname">set_geoip_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/site_analytics/models.html#Request.set_geoip_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#site_analytics.models.Request.set_geoip_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Use the IP address, if provided, to look up and store GeoIP data.</p>
+<p>Respect any provided geoip value by not overwriting it.</p>
+</dd></dl>
 
 <dl class="exception">
 <dt id="site_analytics.models.Request.DoesNotExist">
