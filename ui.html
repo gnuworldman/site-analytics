@@ -74,9 +74,10 @@ must be a complete date and time in ISO-8601 format.</p>
 <div class="section" id="create-a-user">
 <h2>Create a user<a class="headerlink" href="#create-a-user" title="Permalink to this headline">¶</a></h2>
 <p>A superuser (and optionally any further desired users) is required to access
-the Admin or Browsable-API interfaces.  To create a superuser:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="p">{{</span> <span class="n">project_root</span> <span class="p">}}</span><span class="o">/</span><span class="n">src</span>
-<span class="o">./</span><span class="n">site_analytics</span><span class="o">/</span><span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">createsuperuser</span>
+the Admin or Browsable-API interfaces.  To create a superuser (make sure that
+the virtual environment is activated):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;{{ project_root }}/src&quot;</span>
+<span class="s2">&quot;{{ project_root }}/src/site_analytics/manage.py&quot;</span> <span class="n">createsuperuser</span>
 </pre></div>
 </div>
 <p>Then, one can login to the Admin with the superuser to create any additional

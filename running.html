@@ -65,9 +65,11 @@ must be installed:</p>
 </div>
 <p>Prepending &#8220;sudo &#8221; to that command might be necessary if not using a virtual
 environment.</p>
-<p>The static files for all of the apps in the project must be collected:</p>
+<p>The static files for all of the apps in the project must be collected, and the
+database must be initialized/migrated:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;{{ project_root }}/src&quot;</span>
 <span class="s2">&quot;$PYTHONPATH/src/site_analytics/manage.py&quot;</span> <span class="n">collectstatic</span> <span class="o">--</span><span class="n">noinput</span>
+<span class="s2">&quot;$PYTHONPATH/src/site_analytics/manage.py&quot;</span> <span class="n">migrate</span>
 </pre></div>
 </div>
 </div>

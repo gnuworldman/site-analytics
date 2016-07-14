@@ -26,10 +26,11 @@ Create a user
 -------------
 
 A superuser (and optionally any further desired users) is required to access
-the Admin or Browsable-API interfaces.  To create a superuser::
+the Admin or Browsable-API interfaces.  To create a superuser (make sure that
+the virtual environment is activated)::
 
-  cd {{ project_root }}/src
-  ./site_analytics/manage.py createsuperuser
+  export PYTHONPATH="{{ project_root }}/src"
+  "{{ project_root }}/src/site_analytics/manage.py" createsuperuser
 
 Then, one can login to the Admin with the superuser to create any additional
 users.
