@@ -55,6 +55,10 @@ WSGI_APPLICATION = 'site_analytics.wsgi.application'
 
 # Security
 
+# This is required to be able to get static content when running locally.
+# This must be set to False in production, where static content is served differently.
+DEBUG = True
+
 ALLOWED_HOSTS = ['127.0.0.1']
 
 SECRET_KEY = '1l8=#(x54(wg=y-=z*d@5mz*13wljew4_0dwq2#a7b$$539q!='
