@@ -77,9 +77,16 @@ class FilterView(views.APIView):
     template_name = 'site_analytics/filter.html'
 
     def get(self, request, *args, **kwargs):  # pragma: no cover
-        params = request.query_params
+        show_data = bool(request.query_params)
         qs = models.Request.objects.all()
-        if not params:
-            qs = qs.none()
-        data = dict(filter=filters.RequestFilter(params, qs))
+        filter_ = filters.RequestFilter(request.query_params, qs)
+        if show_data:
+            show_data = filter_.form.is_valid()
+        # The form and show_data variables are passed in to work around errors
+        # related to validation, strictness, and template variable dot lookups.
+        # If the template used {{ filter.form }}, then it would attempt
+        # filter['form'] before filter.form, and filter.__getitem__('form')
+        # could raise an error if the form is invalid.  Similarly, show_data
+        # is used instead of {{ filter|length }}.
+        data = dict(filter=filter_, form=filter_.form, show_data=show_data)
         return response.Response(data)

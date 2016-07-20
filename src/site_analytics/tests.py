@@ -11,7 +11,7 @@ from pytz import UTC
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from site_analytics import filters, models
+from site_analytics import models
 from site_analytics._version import __version__
 
 
@@ -474,6 +474,8 @@ class RequestQueryTestCase(BaseAPITestCase):
         data = dict(timestamp_0='invalid datetime format')
         response = self.client.get(self.path, data)
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
+        self.assertDictEqual(dict(timestamp=['Enter a valid date/time.']),
+                             response.data)
 
     def test_filter_username_and_timestamp_not_after(self):
         end = datetime.datetime(2001, 1, 1, tzinfo=UTC)
@@ -490,13 +492,6 @@ class RequestQueryTestCase(BaseAPITestCase):
 
 
 class FilterTestCase(APITestCase):
-
-    def test_getitem_override_passthrough(self):
-        """Test that queryset indices still work with __getitem__ override."""
-        request = create_request(url='https://host.net/')
-        qs = models.Request.objects.filter(pk=request.pk)
-        filterset = filters.RequestFilter(queryset=qs)
-        self.assertEqual(request, filterset[0])
 
     def test_get_page_no_input(self):
         response = self.client.get('/filter.html')

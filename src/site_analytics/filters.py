@@ -64,34 +64,10 @@ class RequestFilter(filterset.FilterSet):
         model = models.Request
         fields = 'url', 'site', 'timestamp', 'username', 'ip_address', 'state'
 
-    def __getitem__(self, item):
-        """Override to bypass errors in template lookup.
-
-        https://github.com/gnuworldman/site-analytics/issues/2
-
-        """
-        if item == 'form':
-            try:
-                return super().__getitem__(item)
-            except exceptions.ValidationError:
-                raise KeyError(item)
-        return super().__getitem__(item)
-
-    def __len__(self):
-        """Override to bypass errors in template lookup.
-
-        https://github.com/gnuworldman/site-analytics/issues/2
-
-        """
-        try:
-            return super().__len__()
-        except exceptions.ValidationError:
-            return 0
-
     @property
     def qs(self):
         """Override to produce a REST Framework ValidationError."""
         try:
             return super().qs
         except ValidationError as exc:
-            raise exceptions.ValidationError(exc.error_dict)
+            raise exceptions.ValidationError(exc.message_dict)
