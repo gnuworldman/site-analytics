@@ -11,17 +11,20 @@ from pytz import UTC
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from site_analytics import models
+from site_analytics import filters, models
 from site_analytics._version import __version__
+
+
+def create_request(**data):
+    obj = models.Request(**data)
+    obj.full_clean()
+    obj.save()
+    return obj
 
 
 class RequestModelTestCase(TestCase):
 
-    def create_request(self, **data):
-        obj = models.Request(**data)
-        obj.full_clean()
-        obj.save()
-        return obj
+    create_request = staticmethod(create_request)
 
     def test_str(self):
         obj = models.Request(url='https://host.net/')
@@ -484,3 +487,26 @@ class RequestQueryTestCase(BaseAPITestCase):
             self.assertEqual(result['user']['name'], data['username'])
             timestamp = self.assertTimestamp(result['timestamp'])
             self.assertLessEqual(timestamp, end)
+
+
+class FilterTestCase(APITestCase):
+
+    def test_getitem_override_passthrough(self):
+        """Test that queryset indices still work with __getitem__ override."""
+        request = create_request(url='https://host.net/')
+        qs = models.Request.objects.filter(pk=request.pk)
+        filterset = filters.RequestFilter(queryset=qs)
+        self.assertEqual(request, filterset[0])
+
+    def test_get_page_no_input(self):
+        response = self.client.get('/filter.html')
+        self.assertEqual(status.HTTP_200_OK, response.status_code,
+                         response.content)
+        self.assertNotIn(b'Enter a valid date/time.', response.content)
+
+    def test_get_page_input_error(self):
+        data = dict(timestamp_0='not a date/time')
+        response = self.client.get('/filter.html', data)
+        self.assertEqual(status.HTTP_200_OK, response.status_code,
+                         response.content)
+        self.assertIn(b'Enter a valid date/time.', response.content)

@@ -56,7 +56,8 @@ WSGI_APPLICATION = 'site_analytics.wsgi.application'
 # Security
 
 # This is required to be able to get static content when running locally.
-# This must be set to False in production, where static content is served differently.
+# This must be set to False in production, where static content is served
+# by the web server.
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
